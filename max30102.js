@@ -51,7 +51,7 @@ MAX30102.prototype.write8 = function(reg, value) {
 
 
 MAX30102.prototype.reset = function(){
-    this.i2c.writeTo(this.ad,REG_MODE_CONFIG,0x40);
+    this.i2c.writeTo(this.ad,C.REG_MODE_CONFIG,0x40);
 };
 
 
