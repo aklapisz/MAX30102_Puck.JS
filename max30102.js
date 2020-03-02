@@ -32,7 +32,7 @@ REG_PART_ID: 0xFF,
 
 function MAX30102(i2c) {
     this.i2c = i2c;
-    this.ad = NULL;
+    this.ad = I2C_WRITE_ADDR;
 }
 
 
