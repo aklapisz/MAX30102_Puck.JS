@@ -46,7 +46,7 @@ MAX30102.prototype.read8 = function(reg) {
 
 MAX30102.prototype.write8 = function(reg, value) {
     this.ad = C.I2C_WRITE_ADDR;
-    this.i2c.writeTo(this.ad, reg >> 8, reg & 0xff);
+    this.i2c.writeTo(this.ad, reg >> 8, reg & 0xff, value);
 };
 
 
