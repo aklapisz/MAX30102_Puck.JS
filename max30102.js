@@ -81,7 +81,11 @@ MAX30102.prototype.init = function(){
      
 };
 
-
+MAX30102.prototype.read_fifo = function(){
+  this.read8(C.REG_INTR_STATUS_1); 
+  this.read8(C.REG_INTR_STATUS_2);
+  return this.read8(C.I2C_READ_ADDR);
+}
 
 exports.connect = function(i2c) {
   return new MAX30102(i2c);
