@@ -38,7 +38,7 @@ function MAX30102(i2c) {
 
 MAX30102.prototype.read8 = function(reg) {
     this.ad = C.I2C_READ_ADDR;
-    this.i2c.write8(this.ad, reg);
+    this.write8(this.ad, reg);
     var data = this.i2c.readFrom(this.ad,1);
     return data[0];
 };
@@ -51,7 +51,7 @@ MAX30102.prototype.write8 = function(reg, value) {
 
 
 MAX30102.prototype.reset = function(){
-    this.i2c.write8(C.REG_MODE_CONFIG,0x40);
+    this.write8(C.REG_MODE_CONFIG,0x40);
 };
 
 
