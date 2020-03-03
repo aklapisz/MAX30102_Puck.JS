@@ -51,10 +51,7 @@ MAX30102.prototype.write8 = function(reg, value) {
 
 
 MAX30102.prototype.reset = function(){
-  if(!this.write8(C.REG_MODE_CONFIG,0x40)){
-    return false;
-  }else{
-    return true;
+  this.write8(C.REG_MODE_CONFIG,0x40);
 };
 
 
