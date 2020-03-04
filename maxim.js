@@ -37,7 +37,7 @@ function MAX30102(i2c) {
 
 MAX30102.prototype.read8 = function(reg) {
     this.write8(this.ad, reg);
-    return this.i2c.readFrom(this.ad,1);
+    return this.i2c.readFrom(this.ad,8);
 };
 
 MAX30102.prototype.write8 = function(reg, value) {
