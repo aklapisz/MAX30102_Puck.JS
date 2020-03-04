@@ -1,5 +1,4 @@
 const C = {
-  
 I2C_ADDR: 0b1010111,
 
 //register addresses
