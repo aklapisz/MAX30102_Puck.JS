@@ -1,6 +1,6 @@
 const C = {
   
-I2C_ADDR: 0b0b1010111,
+I2C_ADDR: 0b1010111,
 
 //register addresses
 REG_INTR_STATUS_1: 0x00,
