@@ -1,7 +1,6 @@
 const C = {
   
-I2C_WRITE_ADDR: 0xAE,
-I2C_READ_ADDR: 0xAF,
+I2C_ADDR: 0b0b1010111,
 
 //register addresses
 REG_INTR_STATUS_1: 0x00,
@@ -32,21 +31,17 @@ REG_PART_ID: 0xFF,
 
 function MAX30102(i2c) {
     this.i2c = i2c;
-    this.ad = C.I2C_WRITE_ADDR;
+    this.ad = C.I2C_ADDR;
 }
 
 
 MAX30102.prototype.read8 = function(reg) {
-    this.ad = C.I2C_READ_ADDR;
     this.write8(this.ad, reg);
-    var data = this.i2c.readFrom(this.ad,1);
-    return data[0];
+    return this.i2c.readFrom(this.ad,1);
 };
 
 MAX30102.prototype.write8 = function(reg, value) {
-    this.ad = C.I2C_WRITE_ADDR;
-    this.i2c.writeTo(this.ad, reg);
-    this.i2c.writeTo(this.ad, value);
+    this.i2c.writeTo(this.ad, reg, value);
 };
 
 
@@ -77,9 +72,9 @@ MAX30102.prototype.init = function(){
 
   this.write8(C.REG_LED2_PA,0x24);  // Choose value for ~ 7mA for LED2
 
-  this.write8(C.REG_PILOT_PA,0x7f);   // Choose value for ~ 25mA for Pilot LED
-     
+  this.write8(C.REG_PILOT_PA,0x7f);   // Choose value for ~ 25mA for Pilot LED   
 };
+
 
 MAX30102.prototype.read_fifo = function(){
   this.read8(C.REG_INTR_STATUS_1); 
