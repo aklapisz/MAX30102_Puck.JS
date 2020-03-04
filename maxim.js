@@ -50,6 +50,7 @@ MAX30102.prototype.reset = function(){
 };
 
 
+
 MAX30102.prototype.init = function(){
   
   this.write8(C.REG_INTR_ENABLE_1, 0xc0); // INTR setting
