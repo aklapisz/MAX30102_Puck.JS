@@ -28,16 +28,19 @@ REG_PART_ID: 0xFF,
 };
 
 
+
 function MAX30102(i2c) {
     this.i2c = i2c;
     this.ad = C.I2C_ADDR;
 }
 
 
+
 MAX30102.prototype.read8 = function(reg) {
     this.i2c.writeTo(this.ad, reg);
     return this.i2c.readFrom(this.ad,1);
 };
+
 
 
 MAX30102.prototype.write8 = function(reg, value) {
@@ -67,47 +70,42 @@ MAX30102.prototype.init = function(){
     
   this.write8(C.REG_LED1_PA,0x24);  //Choose value for ~ 7mA for LED1
   this.write8(C.REG_LED2_PA,0x24);  // Choose value for ~ 7mA for LED2
-  this.write8(C.REG_PILOT_PA,0x7f);   // Choose value for ~ 25mA for Pilot LED   
+  this.write8(C.REG_PILOT_PA,0x7f);   // Choose value for ~ 25mA for Pilot LED 
+  
+  ///////add write function to enable temperature data
   
 };
 
 
-MAX30102.prototype.calibrate = function(register_data){
 
-  var un_temp;
-  var uch_temp;
+MAX30102.prototype.read_fifo_data = function(register_data, sample_number){    ///fixme bitch
   
-  for(let i = 0; i < register_data.buffer_length; i++){
-    
-    this.read8(C.REG_INTR_STATUS_1);
-    this.read8(C.REG_INTR_STATUS_2);
-    this.write8(C.I2C_ADDR, C.REG_FIFO_DATA///////////////////////////////////////////////////continue here
-      
-    if(un_min>aun_red_buffer[i]){
-      un_min=aun_red_buffer[i];  //update signal min
-    };
-      
-    if(un_max<aun_red_buffer[i]){
-      un_max=aun_red_buffer[i];  //update signal max
-    };
-  };
+  var temp_data_array = new Array(6);
+  //var uch_temp;
+  //var data;
   
-};
-
-MAX30102.prototype.read_fifo_data = function(register_data){    ///fixme bitch
-  
-  while(digitalRead(interrupt_pin)){
-  
-  }
-  
-  this.read8(C.REG_INTR_STATUS_1); 
+  this.read8(C.REG_INTR_STATUS_1);
   this.read8(C.REG_INTR_STATUS_2);
-  return this.read8(C.I2C_READ_ADDR);
+  
+  this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
+  temp_data_array = this.i2c.readFrom(this.ad,6);
+  
+  /////////////continue here
+  
 };
+
+
+MAX3010.prototype.readTemperature = function(){
+//////////////////////
+};
+
+
 
 MAX30102.prototype.saturate_data = function(register_data, saturated_data){
 ////////////////////
 };
+
+
 
 exports.connect = function(i2c) {
   return new MAX30102(i2c);
