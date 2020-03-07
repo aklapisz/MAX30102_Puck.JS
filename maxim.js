@@ -72,8 +72,6 @@ MAX30102.prototype.init = function(){
   this.write8(C.REG_LED2_PA,0x24);  // Choose value for ~ 7mA for LED2
   this.write8(C.REG_PILOT_PA,0x7f);   // Choose value for ~ 25mA for Pilot LED 
   
-  ///////add write function to enable temperature data
-  
 };
 
 
@@ -102,7 +100,7 @@ MAX30102.prototype.read_fifo_data = function(register_data, i){    ///fixme bitc
 
 
 
-MAX30102.prototype.turn_on_temperature_read = function(){
+MAX30102.prototype.set_temperature_read = function(){
 
   heart_sensor.write8(C.REG_TEMP_CONFIG, 0x01);
 
