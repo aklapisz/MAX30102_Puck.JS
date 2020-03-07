@@ -120,22 +120,9 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
   temp_data[1] = this.read8(C.REG_TEMP_FRAC)[0];
     
   
-  function add(a, b) {
-    // XOR to get the sum of the bits
-    var sum = a ^ b;
-
-    // "Carry" bits are common to both numbers
-    var carry = (a & b) << 1;
-
-    if (sum & carry) {
-      // Rinse and repeat until there are no leftover bits
-      return add(sum, carry);
-    } else {
-      return sum ^ carry;
-    }
-  }
   
-  temp = add(temp_data[0], temp_data[1]);
+  
+  temp = temp_data[0] + temp_data[1];
   temp = (~temp) - 1;
   
   
