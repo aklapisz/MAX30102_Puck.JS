@@ -119,6 +119,8 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
   temp_data[0] = this.read8(C.REG_TEMP_INTR)[0];
   temp_data[1] = this.read8(C.REG_TEMP_FRAC)[0];
   
+  conosle.log(typeof(temp_data[0]);
+  
   temp = temp_data[0] + temp_data[1];
   
   if(unit == 0){
