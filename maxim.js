@@ -102,7 +102,7 @@ MAX30102.prototype.read_fifo_data = function(register_data, i){    ///fixme bitc
 };
 
 
-MAX30102.prototype.readTemperature = function(saturated_data){
+MAX30102.prototype.readTemperature = function(saturated_data, unit){
   
   var temp_data = [0,0]   //[integer, fraction]
   
@@ -112,7 +112,11 @@ MAX30102.prototype.readTemperature = function(saturated_data){
   temp_data[0] = this.read8(C.REG_TEMP_INTR)[0];
   temp_data[1] = this.read8(C.REG_TEMP_FRAC)[0];
   
-  saturated_data.temperature = temp_data[0] + temp_data[1];
+  if(unit == 0){
+    saturated_data.temperature = temp_data[0] + temp_data[1];
+  }else{
+    saturated_data.temperature = 1.80 * (temp_data[0] + temp_data[1]) + 32.00;
+  }
   
   
 };
