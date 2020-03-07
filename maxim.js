@@ -101,7 +101,14 @@ MAX30102.prototype.read_fifo_data = function(register_data, i){    ///fixme bitc
 };
 
 
-MAX30102.prototype.readTemperature = function(saturated_data, unit){
+
+MAX30102.prototype.turn_on_temperature_read = function(){
+
+  heart_sensor.write8(C.REG_TEMP_CONFIG, 0x01);
+
+};
+
+MAX30102.prototype.getTemperature = function(saturated_data, unit){
   
   var temp_data = [0,0]   //[integer, fraction]
   
