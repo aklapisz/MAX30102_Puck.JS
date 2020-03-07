@@ -109,11 +109,8 @@ MAX30102.prototype.readTemperature = function(saturated_data){
   this.read8(C.REG_INTR_STATUS_1);
   this.read8(C.REG_INTR_STATUS_2);
   
-  this.i2c.writeTo(this.ad, C.REG_TEMP_INTR);
-  temp_data(0) = this.i2c.readFrom(this.ad,1);
-  
-  this.i2c.writeTo(this.ad, C.REG_TEMP_FRAC);
-  temp_data(1) = this.i2c.readFrom(this.ad,1);
+  temp_data[0] = this.read8(C.REG_TEMP_INTR)[0];
+  temp_data[1] = this.read8(C.REG_TEMP_FRAC)[0];
   
   saturated_data.temperature = temp_data[0] + temp_data[1];
   
