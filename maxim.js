@@ -120,7 +120,7 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
   temperature_int = this.read8(C.REG_TEMP_INTR)[0];  
   temperature_frac = this.read8(C.REG_TEMP_FRAC)[0];
   
-  temperature = temperature_int + (temperature_frac * 0.0625;
+  temperature = temperature_int + (temperature_frac * 0.0625);
   
   if(unit == 0){
     saturated_data.temperature = temp;
