@@ -111,17 +111,36 @@ MAX30102.prototype.turn_on_temperature_read = function(){
 MAX30102.prototype.getTemperature = function(saturated_data, unit){
   
   var temp_data = [0,0]   //[integer, fraction]
+  var temp = 0;
   
   this.read8(C.REG_INTR_STATUS_1);
   this.read8(C.REG_INTR_STATUS_2);
  
   temp_data[0] = this.read8(C.REG_TEMP_INTR)[0];
   temp_data[1] = this.read8(C.REG_TEMP_FRAC)[0];
- 
+    
+  
+  function add(a, b) {
+    // XOR to get the sum of the bits
+    var sum = a ^ b;
+
+    // "Carry" bits are common to both numbers
+    var carry = (a & b) << 1;
+
+    if (sum & carry) {
+      // Rinse and repeat until there are no leftover bits
+      return add(sum, carry);
+    } else {
+      return sum ^ carry;
+    }
+  }
+  
+  add(temp_data[0], temp_data[1]);
+  
   if(unit == 0){
-    saturated_data.temperature = temp_data[0] + temp_data[1];
+    saturated_data.temperature = temp;
   }else{
-    saturated_data.temperature = 1.80 * (temp_data[0] + temp_data[1]) + 32.00;
+    saturated_data.temperature = 1.80 * (temp) + 32.00;
   }
   
 };
