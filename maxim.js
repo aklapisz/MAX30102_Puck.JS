@@ -123,9 +123,9 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
   temperature = temperature_int + (temperature_frac * 0.0625);
   
   if(unit == 0){
-    saturated_data.temperature = temp;
+    saturated_data.temperature = temperature;
   }else{
-    saturated_data.temperature = 1.80 * (temp) + 32.00;
+    saturated_data.temperature = 1.80 * (temperature) + 32.00;
   }
   
 };
