@@ -101,7 +101,7 @@ MAX30102.prototype.read_fifo_data = function(register_data, i){    ///fixme bitc
 };
 
 
-MAX3010.prototype.readTemperature = function(){
+MAX30102.prototype.readTemperature = function(){
 //////////////////////
 };
 
