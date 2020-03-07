@@ -105,7 +105,7 @@ MAX30102.prototype.readTemperature = function(saturated_data, unit){
   
   this.write8(C.REG_TEMP_CONFIG, 0x01);
   
-  setTimeout( funtion() {
+  setTimeout( function() {
   
     var temp_data = [0,0]   //[integer, fraction]
   
@@ -120,7 +120,7 @@ MAX30102.prototype.readTemperature = function(saturated_data, unit){
     }else{
       saturated_data.temperature = 1.80 * (temp_data[0] + temp_data[1]) + 32.00;
     }
-  }, 250)
+  }, 250);
   
 };
 
