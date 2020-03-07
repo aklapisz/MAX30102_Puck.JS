@@ -105,21 +105,22 @@ MAX30102.prototype.readTemperature = function(saturated_data, unit){
   
   this.write8(C.REG_TEMP_CONFIG, 0x01);
   
-  var temp_data = [0,0]   //[integer, fraction]
+  setTimeout( funtion() {
   
-  while(pinRead(D31) == 1);
+    var temp_data = [0,0]   //[integer, fraction]
   
-  this.read8(C.REG_INTR_STATUS_1);
-  this.read8(C.REG_INTR_STATUS_2);
+    this.read8(C.REG_INTR_STATUS_1);
+    this.read8(C.REG_INTR_STATUS_2);
   
-  temp_data[0] = this.read8(C.REG_TEMP_INTR)[0];
-  temp_data[1] = this.read8(C.REG_TEMP_FRAC)[0];
+    temp_data[0] = this.read8(C.REG_TEMP_INTR)[0];
+    temp_data[1] = this.read8(C.REG_TEMP_FRAC)[0];
   
-  if(unit == 0){
-    saturated_data.temperature = temp_data[0] + temp_data[1];
-  }else{
-    saturated_data.temperature = 1.80 * (temp_data[0] + temp_data[1]) + 32.00;
-  }
+    if(unit == 0){
+      saturated_data.temperature = temp_data[0] + temp_data[1];
+    }else{
+      saturated_data.temperature = 1.80 * (temp_data[0] + temp_data[1]) + 32.00;
+    }
+  }, 250)
   
 };
 
