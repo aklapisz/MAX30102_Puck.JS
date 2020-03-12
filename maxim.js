@@ -191,9 +191,230 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Functions for HR/SpO2 calculation
 
-MAX30102.prototype.saturate_data = function(register_data, saturated_data){
-////////////////////
+let ST = 4;
+let FS = 25;
+let sum_X2 = 83325.00;
+
+let MAX_HR = 125;
+let MIN_HR = 40;
+let TYPICAL_HR = 60;
+
+let min_autocorrelation_ratio = 0.5;
+let min_pearson_correlation = 0.8;
+
+const BUFFER_SIZE = FS * ST;
+const FS60 = FS * 60;
+const LOWEST_PERIOD = FS60/MAX_HR;
+const HIGHEST_PERIOD = FS60/MAX_HR;
+const INIT_INTERVAL = FS60/TYPICAL_HR;
+const mean_X = (BUFFER_SIZE-1)/2.0;
+
+let processingData = {
+  an_x: new Array(BUFFER_SIZE),
+  an_y: new Array(BUFFER_SIZE),
+  beta_ir: 0.0,
+  beta_red: 0.0,
+  f_ir_sumsq: 0.0,
+  f_red_sumsq: 0.0,
+  f_y_ac: 0.0,
+  f_x_ac: 0.0,
+  n_last_peak_interval: INIT_INTERVAL,
+  ratio: 0,
+  correl: 0
 };
+
+MAX30102.prototype.data_saturation = function(register_data, saturated_data){
+
+  let k;
+  let buffer_len = register_data.buffer_length;
+  let f_ir_mean,f_red_mean;
+  let xy_ratio;
+  let x;
+
+  processingData.n_last_peak_interval = INIT_INTERVAL;
+
+
+//calculate DC mean of ir and red buffers
+  let f_ir_mean = 0.0;
+  let f_red_mean = 0.0;
+
+  for(k=0; k<buffer_len; k++){
+    f_ir_mean += register_data.ir_buffer[k];
+    f_red_mean += register_data.red_buffer[k];
+  }
+
+  f_ir_mean = f_ir_mean/buffer_len;
+  f_red_mean = f_red_mean/buffer_len;
+
+
+//remove DC from both buffers
+  for(k=0; k<buffer_len; ++k){
+    processingData.an_x[k] = register_data.ir_buffer[k] - f_ir_mean;
+    processingData.an_y[k] = register_data.red_buffer[k] - f_red_mean;
+  }
+
+//remove linear trend (baseline leveling)
+  this.linear_regression_beta(processingData, mean_X, sum_X2);
+  for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
+    an_x[k] -= processingData.beta_ir * x;
+    an_y[k] -= processingData.beta_red * x;
+  }
+
+//Calculate RMS of both AC signals
+  this.rms(processingData,buffer_len);
+
+//Calculate Pearson correlation between red and IR
+  processingData.correl = this.Pcorrelation(processingData, buffer_len) / Math.sqrt(processingData.f_red_sumsq*processingData.f_ir_sumsq);
+
+  if(processingData.correl >= min_pearson_correlation){
+    this.signal_periodicity(processingData, BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
+  }else processingData.n_last_peak_interval = 0;
+
+  if(processingData.n_last_peak_interval != 0){
+    saturated_data.n_heart_rate = Math.round(FS60/processingData.n_last_peak_interval);
+    saturated_data.ch_hr_valid = 1;
+  }else{
+    processingData.n_last_peak_interval = FS;
+    saturated_data.n_heart_rate = -999;
+    saturated_data.ch_hr_valid = 0;
+    saturated_data.n_spo2 = -999;
+    saturated_data.ch_spo2_valid = 0;
+    return;
+  }
+
+  xy_ratio = (processingData.f_y_ac * f_ir_mean) / (processingData.f_x_ac * f_red_mean);
+  if(xy_ratio>0.02 && xy_ratio<1.84){
+    saturated_data.n_spo2 = (-45.060 * xy_ratio + 30.354) * xy_ratio + 94.845;
+    saturated_data.ch_spo2_valid = 1;
+  }else{
+    saturated_data.n_spo2 = -999;
+    saturated_data.ch_spo2_valid = 0;
+  }
+
+};
+
+
+
+MAX30102.prototype.linear_regression_beta = function(processingData, xmean, sum_x2){
+  let x,k,beta;
+
+  beta = 0.0;
+  for(x=-xmean, k=0; x<=xmean; ++x, ++k){
+    beta += x*(processingData.an_x[k]);
+  }
+  processingData.beta_ir = beta/sum_x2;
+
+  beta = 0.0;
+  for(x=-xmean, k=0; x<=xmean; ++x, ++k){
+    beta += x*(processingData.n_y[k]);
+  }
+  processingData.beta_red = beta/sum_x2;
+
+};
+
+
+
+MAX30102.prototype.autocorrelation = function(processingData, n_size, n_lag){
+
+  let i, n_temp = n_size - n_lag;
+  let sum = 0.0;
+  if(n_temp<=0) return sum;
+  for(i=0; i<n_temp; ++i){
+    sum += processingData.an_x[i] * processingData.an_x[i+n_lag];
+  }
+
+  return sum/n_temp;
+
+};
+
+
+
+MAX30102.prototype.rms = function(processingData, n_size){
+
+  let i;
+
+  let r = 0.0;
+  let sumsq = 0.0;
+  for(i=0; i<n_size; ++i){
+    r = processingData.an_x[i];
+    sumsq += r * r;
+  }
+  sumssq /= n_size;
+  processingData.f_ir_sumsq, processingData.f_x_ac = Math.sqrt(sumsq);
+
+
+  let r = 0.0;
+  let sumsq = 0.0;
+  for(i=0; i<n_size; ++i){
+    r = processingData.an_y[i];
+    sumsq += r * r;
+  }
+  sumssq /= n_size;
+  processingData.f_red_sumsq, processingData.f_y_ac = Math.sqrt(sumsq);
+
+};
+
+
+
+MAX30102.prototype.Pcorrelation = function(processingData, n_size){
+
+  let i;
+  let r = 0.0;
+
+  for(i=0; i<n_size; ++i){
+    r += processingData.an_x[i] * processingData.an_y[i];
+  }
+
+  processingData.correl = r/n_size;
+
+};
+
+
+//rf_signal_periodicity(float *pn_x, int32_t n_size, int32_t *p_last_periodicity, int32_t n_min_distance, int32_t n_max_distance, float min_aut_ratio, float aut_lag0, float *ratio)   -function statement
+//rf_signal_periodicity(an_x, BUFFER_SIZE, &n_last_peak_interval, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio, f_ir_sumsq, ratio);
+//signal_periodicity(processingData, BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio); -js
+
+
+MAX30102.prototype.signal_periodicity = function(processingData, n_size, n_min_distance, n_max_distance, min_autocorrelation_ratio){
+
+  let n_lag;
+  let aut,aut_left,aut_right,aut_save = 0.0;
+  let left_limit_reached = false;
+
+  n_lag = processingData.n_last_peak_interval;
+  aut_save = aut = this.autocorrelation(processingData.an_x, n_size, n_lag);
+  aut_left = aut;
+  do{
+    aut=aut_left;
+    n_lag--;
+    aut_left = this.autocorrelation(processingData.an_x, n_size, n_lag);
+  } while(aut_left > aut && n_lag > n_min_distance);
+
+  if(n_lag == n_min_distance){
+    left_limit_reached = true;
+    n_lag = processingData.n_last_peak_interval;
+    aut = aut_save;;
+  }else n_lag++;
+
+  if(n_lag == processingData.n_last_peak_interval){
+    aut_right = aut;
+    do{
+      aut = aut_right;
+      n_lag++;
+      aut_right = this.autocorrelation(processingData.an_x, n_size, n_lag);
+    } while(aut_right > aut && n_lag < n_max_distance);
+
+    if(n_lag == n_max_distance) n_lag = 0;
+    else n_lag--;
+    if(n_lag == processingData.n_last_peak_interval && left_limit_reached) n_lag = 0;
+  }
+
+  processingData.ratio = aut / processingData.f_ir_sumsq;
+  if(processingData.ratio < min_aut_ratio) n_lag = 0;
+  processingData.n_last_peak_interval = n_lag;
+
+};
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
