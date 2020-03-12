@@ -55,16 +55,9 @@ const C = {
 
 
 //object that holds all data to be used for HR/SpO2 functions
-let processingData = {
-an_x: new Array(BUFFER_SIZE),
-an_y: new Array(BUFFER_SIZE),
-f_ir_sumsq: 0.0,
-f_red_sumsq: 0.0,
-ratio: 0,
-correl: 0
-};
-
-
+//
+//
+//
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Main functions to communicate with MAX30102 via I2C
