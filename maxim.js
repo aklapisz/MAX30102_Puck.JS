@@ -220,7 +220,7 @@ MAX30102.prototype.data_saturation = function(register_data, saturated_data){
 
   let k;
   let buffer_len = register_data.buffer_length;
-  let f_ir_mean,f_red_mean;
+  let f_ir_mean,f_red_mean = 0.0;
   let xy_ratio;
   let x;
 
@@ -228,8 +228,6 @@ MAX30102.prototype.data_saturation = function(register_data, saturated_data){
 
 
 //calculate DC mean of ir and red buffers
-  let f_ir_mean = 0.0;
-  let f_red_mean = 0.0;
 
   for(k=0; k<buffer_len; k++){
     f_ir_mean += register_data.ir_buffer[k];
@@ -333,17 +331,17 @@ MAX30102.prototype.rms = function(processingData, n_size){
     sumsq += r * r;
   }
   sumssq /= n_size;
-  processingData.f_ir_sumsq, processingData.f_x_ac = Math.sqrt(sumsq);
+  processingData.f_ir_sumsq = processingData.f_x_ac = Math.sqrt(sumsq);
 
 
-  let r = 0.0;
-  let sumsq = 0.0;
+  r = 0.0;
+  sumsq = 0.0;
   for(i=0; i<n_size; ++i){
     r = processingData.an_y[i];
     sumsq += r * r;
   }
   sumssq /= n_size;
-  processingData.f_red_sumsq, processingData.f_y_ac = Math.sqrt(sumsq);
+  processingData.f_red_sumsq = processingData.f_y_ac = Math.sqrt(sumsq);
 
 };
 
@@ -386,7 +384,7 @@ MAX30102.prototype.signal_periodicity = function(processingData, n_size, n_min_d
   if(n_lag == n_min_distance){
     left_limit_reached = true;
     n_lag = processingData.n_last_peak_interval;
-    aut = aut_save;;
+    aut = aut_save;
   }else n_lag++;
 
   if(n_lag == processingData.n_last_peak_interval){
@@ -407,6 +405,7 @@ MAX30102.prototype.signal_periodicity = function(processingData, n_size, n_min_d
   processingData.n_last_peak_interval = n_lag;
 
 };
+
 
 
 
