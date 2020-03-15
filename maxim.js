@@ -297,7 +297,7 @@ MAX30102.prototype.linear_regression_beta = function(processingData, xmean, sum_
 
   beta = 0.0;
   for(x=-xmean, k=0; x<=xmean; ++x, ++k){
-    beta += x*(processingData.n_y[k]);
+    beta += x*(processingData.an_y[k]);
   }
   processingData.beta_red = beta/sum_x2;
 
