@@ -245,7 +245,7 @@ MAX30102.prototype.data_saturation = function(register_data, saturated_data){
   }
 
 //remove linear trend (baseline leveling)
-  this.linear_regression_beta(processingData, mean_X, sum_X2);
+  this.linear_regression_beta(mean_X, sum_X2);
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
     an_x[k] -= processingData.beta_ir * x;
     an_y[k] -= processingData.beta_red * x;
@@ -286,8 +286,8 @@ MAX30102.prototype.data_saturation = function(register_data, saturated_data){
 
 
 
-MAX30102.prototype.linear_regression_beta = function(processingData, xmean, sum_x2){
-  let x,k,beta;
+MAX30102.prototype.linear_regression_beta = function(xmean, sum_x2){
+  let x,k,beta = 0.0;
 
   beta = 0.0;
   for(x=-xmean, k=0; x<=xmean; ++x, ++k){
