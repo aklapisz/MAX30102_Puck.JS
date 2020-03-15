@@ -219,6 +219,7 @@ let processingData = {
 MAX30102.prototype.data_saturation = function(register_data, saturated_data){
 
   let k;
+  let an_y_temp,an_x_temp;
   let buffer_len = register_data.buffer_length;
   let f_ir_mean,f_red_mean = 0.0;
   let xy_ratio;
@@ -245,7 +246,9 @@ MAX30102.prototype.data_saturation = function(register_data, saturated_data){
   }
 
 //remove linear trend (baseline leveling)
-  this.linear_regression_beta(processingData.an_y, processingData.an_x, mean_X, sum_X2);
+  an_y_temp = Array.from(processingData.an_y);
+  an_x_temp = Array.from(processingData.an_x);
+  this.linear_regression_beta(an_y_temp, an_x_temp, mean_X, sum_X2);
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
     processingData.an_x[k] -= processingData.beta_ir * x;
     processingData.an_y[k] -= processingData.beta_red * x;
