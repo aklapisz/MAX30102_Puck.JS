@@ -252,13 +252,13 @@ MAX30102.prototype.data_saturation = function(register_data, saturated_data){
   }
 
 //Calculate RMS of both AC signals
-  this.rms(processingData,buffer_len);
+  this.rms(buffer_len);
 
 //Calculate Pearson correlation between red and IR
-  processingData.correl = this.Pcorrelation(processingData, buffer_len) / Math.sqrt(processingData.f_red_sumsq*processingData.f_ir_sumsq);
+  processingData.correl = this.Pcorrelation(buffer_len) / Math.sqrt(processingData.f_red_sumsq*processingData.f_ir_sumsq);
 
   if(processingData.correl >= min_pearson_correlation){
-    this.signal_periodicity(processingData, BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
+    this.signal_periodicity(BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
   }else processingData.n_last_peak_interval = 0;
 
   if(processingData.n_last_peak_interval != 0){
@@ -305,7 +305,7 @@ MAX30102.prototype.linear_regression_beta = function(xmean, sum_x2){
 
 
 
-MAX30102.prototype.autocorrelation = function(processingData, n_size, n_lag){
+MAX30102.prototype.autocorrelation = function(n_size, n_lag){
 
   let i, n_temp = n_size - n_lag;
   let sum = 0.0;
@@ -320,7 +320,7 @@ MAX30102.prototype.autocorrelation = function(processingData, n_size, n_lag){
 
 
 
-MAX30102.prototype.rms = function(processingData, n_size){
+MAX30102.prototype.rms = function(n_size){
 
   let i;
 
@@ -347,7 +347,7 @@ MAX30102.prototype.rms = function(processingData, n_size){
 
 
 
-MAX30102.prototype.Pcorrelation = function(processingData, n_size){
+MAX30102.prototype.Pcorrelation = function(n_size){
 
   let i;
   let r = 0.0;
@@ -366,7 +366,7 @@ MAX30102.prototype.Pcorrelation = function(processingData, n_size){
 //signal_periodicity(processingData, BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio); -js
 
 
-MAX30102.prototype.signal_periodicity = function(processingData, n_size, n_min_distance, n_max_distance, min_autocorrelation_ratio){
+MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_distance, min_autocorrelation_ratio){
 
   let n_lag;
   let aut,aut_left,aut_right,aut_save = 0.0;
