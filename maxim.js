@@ -247,8 +247,8 @@ MAX30102.prototype.data_saturation = function(register_data, saturated_data){
 //remove linear trend (baseline leveling)
   this.linear_regression_beta(mean_X, sum_X2);
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
-    an_x[k] -= processingData.beta_ir * x;
-    an_y[k] -= processingData.beta_red * x;
+    processingData.an_x[k] -= processingData.beta_ir * x;
+    processingData.an_y[k] -= processingData.beta_red * x;
   }
 
 //Calculate RMS of both AC signals
@@ -291,13 +291,13 @@ MAX30102.prototype.linear_regression_beta = function(xmean, sum_x2){
 
   beta = 0.0;
   for(x=-xmean, k=0; x<=xmean; ++x, ++k){
-    beta += x*(processingData.an_x[k]);
+    beta += x * processingData.an_x[k];
   }
   processingData.beta_ir = beta/sum_x2;
 
   beta = 0.0;
   for(x=-xmean, k=0; x<=xmean; ++x, ++k){
-    beta += x*(processingData.an_y[k]);
+    beta += x * processingData.an_y[k];
   }
   processingData.beta_red = beta/sum_x2;
 
