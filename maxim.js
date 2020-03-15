@@ -330,7 +330,7 @@ MAX30102.prototype.rms = function(n_size){
     r = processingData.an_x[i];
     sumsq += r * r;
   }
-  sumssq /= n_size;
+  sumsq /= n_size;
   processingData.f_ir_sumsq = processingData.f_x_ac = Math.sqrt(sumsq);
 
 
@@ -340,7 +340,7 @@ MAX30102.prototype.rms = function(n_size){
     r = processingData.an_y[i];
     sumsq += r * r;
   }
-  sumssq /= n_size;
+  sumsq /= n_size;
   processingData.f_red_sumsq = processingData.f_y_ac = Math.sqrt(sumsq);
 
 };
