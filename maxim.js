@@ -126,13 +126,13 @@ MAX30102.prototype.read_fifo_data = function(register_data, i){
   this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
   temp_data_array = this.i2c.readFrom(this.ad,6);
   
-  register_data.red_buffer[i] = temp_data_array[0]<<16;
-  register_data.red_buffer[i] = temp_data_array[1]<<8;
-  register_data.red_buffer[i] = temp_data_array[2];
+  register_data.red_buffer[i] += temp_data_array[0]<<16;
+  register_data.red_buffer[i] += temp_data_array[1]<<8;
+  register_data.red_buffer[i] += temp_data_array[2];
   
-  register_data.ir_buffer[i] = temp_data_array[3]<<16;
-  register_data.ir_buffer[i] = temp_data_array[4]<<8;
-  register_data.ir_buffer[i] = temp_data_array[5];
+  register_data.ir_buffer[i] += temp_data_array[3]<<16;
+  register_data.ir_buffer[i] += temp_data_array[4]<<8;
+  register_data.ir_buffer[i] += temp_data_array[5];
   
 };
 
