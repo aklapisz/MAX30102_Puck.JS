@@ -223,7 +223,6 @@ let processingData = {
 MAX30102.prototype.data_saturation = function(register_data, saturated_data){
 
   let k;
-  let an_y_temp,an_x_temp;
   let buffer_len = register_data.buffer_length;
   let f_ir_mean,f_red_mean = 0.0;
   let xy_ratio;
@@ -249,14 +248,15 @@ console.log("removing dc");
     processingData.an_x[k] = register_data.red_buffer[k] - f_red_mean;
     console.log(processingData.an_x[k]);
   }
-
+console.log("removing baseline");
 //remove linear trend (baseline leveling)
-  an_y_temp = Array.from(processingData.an_y);
-  an_x_temp = Array.from(processingData.an_x);
+  let an_y_temp = [...processingData.an_y];
+  let an_x_temp = [...processingData.an_x];
   this.linear_regression_beta(an_y_temp, an_x_temp, mean_X, sum_X2);
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
     processingData.an_x[k] -= processingData.beta_ir * x;
     processingData.an_y[k] -= processingData.beta_red * x;
+    console.log(processingData.an_x[k]);
   }
 
 //Calculate RMS of both AC signals
