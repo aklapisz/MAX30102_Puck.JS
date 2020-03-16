@@ -271,7 +271,7 @@ console.log("removing baseline");
     saturated_data.n_heart_rate = Math.round(FS60/processingData.n_last_peak_interval);
     saturated_data.ch_hr_valid = 1;
   }else{
-    cosole.log("enetered");
+    console.log("enetered");
     processingData.n_last_peak_interval = FS;
     saturated_data.n_heart_rate = -999;
     saturated_data.ch_hr_valid = 0;
