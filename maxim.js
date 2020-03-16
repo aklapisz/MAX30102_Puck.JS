@@ -250,8 +250,8 @@ console.log("removing dc");
   }
 console.log("removing baseline");
 //remove linear trend (baseline leveling)
-  let an_y_temp = JSON.parse(JSON.stringify(processingData.an_y));
-  let an_x_temp = JSON.parse(JSON.stringify(processingData.an_x));
+  let an_y_temp = processingData.an_y.slice();
+  let an_x_temp = processingData.an_x.slice();
   this.linear_regression_beta(an_y_temp, an_x_temp, mean_X, sum_X2);
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
     processingData.an_x[k] -= processingData.beta_ir * x;
