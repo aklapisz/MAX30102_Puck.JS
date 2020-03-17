@@ -188,16 +188,16 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Functions for HR/SpO2 calculation
 
-let ST = 4;
-let FS = 25;
-let sum_X2 = 83325.00;
+const ST = 4;
+const FS = 25;
+const sum_X2 = 83325.00;
 
 let MAX_HR = 125;
 let MIN_HR = 40;
 let TYPICAL_HR = 60;
 
-let min_autocorrelation_ratio = 0.5;
-let min_pearson_correlation = 0.8;
+const min_autocorrelation_ratio = 0.5;
+const min_pearson_correlation = 0.8;
 
 const BUFFER_SIZE = FS * ST;
 const FS60 = FS * 60;
