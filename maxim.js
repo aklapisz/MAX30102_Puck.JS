@@ -241,20 +241,18 @@ MAX30102.prototype.data_saturation = function(register_data, saturated_data){
   f_ir_mean = f_ir_mean/buffer_len;
   f_red_mean = f_red_mean/buffer_len;
 
-console.log("removing dc");
+  
 //remove DC from both buffers
   for(k=0; k<buffer_len; ++k){
     processingData.an_y[k] = register_data.ir_buffer[k] - f_ir_mean;
     processingData.an_x[k] = register_data.red_buffer[k] - f_red_mean;
-    console.log(processingData.an_x[k]);
   }
-console.log("removing baseline");
+  
 //remove linear trend (baseline leveling)
   this.linear_regression_beta(processingData.an_y, processingData.an_x, mean_X, sum_X2);
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
     processingData.an_x[k] -= processingData.beta_ir * x;
     processingData.an_y[k] -= processingData.beta_red * x;
-    console.log(processingData.an_x[k]);
   }
 
 //Calculate RMS of both AC signals
@@ -271,7 +269,6 @@ console.log("removing baseline");
     saturated_data.n_heart_rate = Math.round(FS60/processingData.n_last_peak_interval);
     saturated_data.ch_hr_valid = 1;
   }else{
-    console.log("enetered");
     processingData.n_last_peak_interval = FS;
     saturated_data.n_heart_rate = -999;
     saturated_data.ch_hr_valid = 0;
