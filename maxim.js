@@ -135,8 +135,6 @@ MAX30102.prototype.read_fifo_data = function(register_data,i){
   register_data.ir_buffer[i] += (temp_data_array[4]<<8);
   register_data.ir_buffer[i] += temp_data_array[5];
   register_data.ir_buffer[i] &= 0x03FFFF;
-    
-  }
   
 };
 
