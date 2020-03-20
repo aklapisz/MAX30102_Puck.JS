@@ -126,7 +126,7 @@ MAX30102.prototype.read_fifo_data = function(register_data){
   this.read8(C.REG_INTR_STATUS_1);
   this.read8(C.REG_INTR_STATUS_2);
     
-  while(digitalRead(interrupt_pin)==1);
+  while(digitalRead(31)==1);
   
   this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
   temp_data_array = this.i2c.readFrom(this.ad,6);
