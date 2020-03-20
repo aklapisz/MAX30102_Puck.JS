@@ -116,27 +116,32 @@ MAX30102.prototype.init = function(){
 //reads data stores in FIFO register
 //note:this data holds amount of reflected light, NOT the actual heart rate/SPo2.
 //in order to get heart rate/SpO2, use this function to collect data and then send collected data to saturate_data
-MAX30102.prototype.read_fifo_data = function(register_data, i){
+MAX30102.prototype.read_fifo_data = function(register_data){
   
-  var temp_data_array = new Array(6);
+  let i = 0;
+  var temp_data_array = new Array(6).fill(0);
+  
+  for(i=0;i<100,i++){
   
   this.read8(C.REG_INTR_STATUS_1);
   this.read8(C.REG_INTR_STATUS_2);
+    
+  while(digitalRead(interrupt_pin)==1);
   
   this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
   temp_data_array = this.i2c.readFrom(this.ad,6);
   
-  register_data.red_buffer[i] = 0;
   register_data.red_buffer[i] += (temp_data_array[0]<<16);
   register_data.red_buffer[i] += (temp_data_array[1]<<8);
   register_data.red_buffer[i] += temp_data_array[2];
   register_data.red_buffer[i] &= 0x03FFFF;
   
-  register_data.ir_buffer[i] = 0;
   register_data.ir_buffer[i] += (temp_data_array[3]<<16);
   register_data.ir_buffer[i] += (temp_data_array[4]<<8);
   register_data.ir_buffer[i] += temp_data_array[5];
   register_data.ir_buffer[i] &= 0x03FFFF;
+    
+  }
   
 };
 
