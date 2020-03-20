@@ -116,6 +116,8 @@ MAX30102.prototype.init = function(){
 //reads data stores in FIFO register
 //note:this data holds amount of reflected light, NOT the actual heart rate/SPo2.
 //in order to get heart rate/SpO2, use this function to collect data and then send collected data to saturate_data
+let temp_data_array = new Array(100).fill(0);
+
 MAX30102.prototype.read_fifo_data = function(register_data,i){
   
   this.read8(C.REG_INTR_STATUS_1);
