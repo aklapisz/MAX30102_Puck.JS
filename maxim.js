@@ -118,26 +118,33 @@ MAX30102.prototype.init = function(){
 //in order to get heart rate/SpO2, use this function to collect data and then send collected data to saturate_data
 //let temp_data_array = new Uint32Array(100).fill(0);
 
-MAX30102.prototype.read_fifo_data = function(register_data,i){
+MAX30102.prototype.read_fifo_data = function(register_data, numSamples, digitalRead, interrupt_pin){
   
-  register_data.red_buffer[i] = 0;
-  register_data.ir_buffer[i] = 0;
   
-  this.read8(C.REG_INTR_STATUS_1);
-  this.read8(C.REG_INTR_STATUS_2);
+  for(i=0;i<numSamples;++i){
+    
+    register_data.red_buffer[i] = 0;
+    register_data.ir_buffer[i] = 0;
+    
+    while(digitalRead(interrupt_pin)==1)
   
-  this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
+    this.read8(C.REG_INTR_STATUS_1);
+    this.read8(C.REG_INTR_STATUS_2);
   
-  register_data.red_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<16;
-  register_data.red_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<8;
-  register_data.red_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0]);
+    this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
   
-  register_data.ir_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<16;
-  register_data.ir_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<8;
-  register_data.ir_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: true}, 1)[0]);
+    register_data.red_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<16;
+    register_data.red_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<8;
+    register_data.red_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0]);
   
-  register_data.red_buffer[i] &= 0x03FFFF;
-  register_data.ir_buffer[i] &= 0x03FFFF;
+    register_data.ir_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<16;
+    register_data.ir_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<8;
+    register_data.ir_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: true}, 1)[0]);
+  
+    register_data.red_buffer[i] &= 0x03FFFF;
+    register_data.ir_buffer[i] &= 0x03FFFF;
+    
+  }
   
 };
 
