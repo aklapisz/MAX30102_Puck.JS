@@ -120,6 +120,9 @@ MAX30102.prototype.init = function(){
 
 MAX30102.prototype.read_fifo_data = function(register_data,i){
   
+  register_data.red_buffer[i] = 0;
+  register_data.ir_buffer[i] = 0;
+  
   this.read8(C.REG_INTR_STATUS_1);
   this.read8(C.REG_INTR_STATUS_2);
   
