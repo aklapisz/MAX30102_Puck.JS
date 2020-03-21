@@ -120,6 +120,7 @@ MAX30102.prototype.init = function(){
 
 MAX30102.prototype.read_fifo_data = function(register_data, numSamples, digitalRead, interrupt_pin){
   
+  let temp_data_array = new Array(6);
   
   for(i=0;i<numSamples;++i){
     
