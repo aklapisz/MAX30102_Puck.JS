@@ -133,13 +133,13 @@ MAX30102.prototype.read_fifo_data = function(register_data, numSamples, digitalR
   
     this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
   
-    register_data.red_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<16;
-    register_data.red_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<8;
-    register_data.red_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0]);
+    register_data.red_buffer[i] += (this.i2c.readFrom(this.ad, 1)[0])<<16;
+    register_data.red_buffer[i] += (this.i2c.readFrom(this.ad, 1)[0])<<8;
+    register_data.red_buffer[i] += (this.i2c.readFrom(this.ad, 1)[0]);
   
-    register_data.ir_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<16;
-    register_data.ir_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: false}, 1)[0])<<8;
-    register_data.ir_buffer[i] += (this.i2c.readFrom({address: this.ad, stop: true}, 1)[0]);
+    register_data.ir_buffer[i] += (this.i2c.readFrom(this.ad, 1)[0])<<16;
+    register_data.ir_buffer[i] += (this.i2c.readFrom(this.ad, 1)[0])<<8;
+    register_data.ir_buffer[i] += (this.i2c.readFrom(this.ad, 1)[0]);
   
     register_data.red_buffer[i] &= 0x03FFFF;
     register_data.ir_buffer[i] &= 0x03FFFF;
