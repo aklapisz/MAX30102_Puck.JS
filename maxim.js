@@ -1,16 +1,5 @@
 //NOTE!!!
-/* In order to use this library properly, certain objects in main code need to be declared...
-
-var register_data = {
-  un_brightness: 0,
-  buffer_length: 100,
-  un_min: 0x3FFF,
-  un_max: 0,
-  un_prev_data: 0,
-  ir_buffer: new Array(this.buffer_length),
-  red_buffer: new Array(this.buffer_length)
-};
-
+/* In order to use this library properly, this object must be declared in the main code...
 
 var saturated_data = {
   n_spo2: 0,  //SPO2 value
@@ -21,6 +10,24 @@ var saturated_data = {
 };
 
 */
+
+const ST = 4;
+const FS = 25;
+const sum_X2 = 83325.00;
+
+let MAX_HR = 125;
+let MIN_HR = 40;
+let TYPICAL_HR = 60;
+
+const min_autocorrelation_ratio = 0.5;
+const min_pearson_correlation = 0.8;
+
+const BUFFER_SIZE = FS * ST;
+const FS60 = FS * 60;
+const LOWEST_PERIOD = FS60/MAX_HR;
+const HIGHEST_PERIOD = FS60/MAX_HR;
+const INIT_INTERVAL = FS60/TYPICAL_HR;
+const mean_X = (BUFFER_SIZE-1)/2.0;
 
 
 //object that holds all relavant register addresses on the MAX30102
@@ -57,9 +64,26 @@ const C = {
 //object that holds all data to be used for HR/SpO2 functions
 let register_data = {
   buffer_length: 100,
-  ir_buffer: new Uint32Array(100),
-  red_buffer: new Uint32Array(100)
+  ir_buffer: new Uint32Array(BUFFER_SIZE),
+  red_buffer: new Uint32Array(BUFFER_SIZE)
 };
+
+
+let processingData = {
+  an_x: new Array(BUFFER_SIZE),
+  an_y: new Array(BUFFER_SIZE),
+  beta_ir: 0.0,
+  beta_red: 0.0,
+  f_ir_sumsq: 0.0,
+  f_red_sumsq: 0.0,
+  f_y_ac: 0.0,
+  f_x_ac: 0.0,
+  n_last_peak_interval: INIT_INTERVAL,
+  ratio: 0,
+  correl: 0
+};
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Main functions to communicate with MAX30102 via I2C
@@ -123,7 +147,6 @@ MAX30102.prototype.init = function(){
 MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   let temp_data_array = new Uint8Array(6);
-  temp_data_array.ArrayBufferView.fill(0);
   
   for(i=0;i<register_data.buffer_length;i++){
     
