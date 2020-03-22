@@ -223,37 +223,6 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Functions for HR/SpO2 calculation
 
-const ST = 4;
-const FS = 25;
-const sum_X2 = 83325.00;
-
-let MAX_HR = 125;
-let MIN_HR = 40;
-let TYPICAL_HR = 60;
-
-const min_autocorrelation_ratio = 0.5;
-const min_pearson_correlation = 0.8;
-
-const BUFFER_SIZE = FS * ST;
-const FS60 = FS * 60;
-const LOWEST_PERIOD = FS60/MAX_HR;
-const HIGHEST_PERIOD = FS60/MAX_HR;
-const INIT_INTERVAL = FS60/TYPICAL_HR;
-const mean_X = (BUFFER_SIZE-1)/2.0;
-
-let processingData = {
-  an_x: new Array(BUFFER_SIZE),
-  an_y: new Array(BUFFER_SIZE),
-  beta_ir: 0.0,
-  beta_red: 0.0,
-  f_ir_sumsq: 0.0,
-  f_red_sumsq: 0.0,
-  f_y_ac: 0.0,
-  f_x_ac: 0.0,
-  n_last_peak_interval: INIT_INTERVAL,
-  ratio: 0,
-  correl: 0
-};
 
 MAX30102.prototype.data_saturation = function(register_data, saturated_data){
 
