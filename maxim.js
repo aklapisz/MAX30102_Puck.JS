@@ -55,10 +55,10 @@ const C = {
 
 
 //object that holds all data to be used for HR/SpO2 functions
-var register_data = {
+let register_data = {
   buffer_length: 100,
-  ir_buffer: new Uint32Array(this.buffer_length),
-  red_buffer: new Uint32Array(this.buffer_length)
+  ir_buffer: new Uint32Array(100),
+  red_buffer: new Uint32Array(100)
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
