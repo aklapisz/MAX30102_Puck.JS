@@ -63,7 +63,6 @@ const C = {
 
 //object that holds all data to be used for HR/SpO2 functions
 let register_data = {
-  buffer_length: 100,
   ir_buffer: new Uint32Array(BUFFER_SIZE),
   red_buffer: new Uint32Array(BUFFER_SIZE)
 };
@@ -148,7 +147,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   let temp_data_array = new Uint8Array(6);
   
-  for(i=0;i<register_data.buffer_length;i++){
+  for(i=0;i<BUFFER_SIZE;i++){
     
     register_data.red_buffer[i] = 0;
     register_data.ir_buffer[i] = 0;
@@ -173,6 +172,11 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     
   }
   
+  for(i=0;i<100;++i){
+    console.log(register_data.red_buffer[i]);
+  }
+  
+  
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,9 +189,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
 //sends an activate bit to MAX30102 to store a temperature reading
 //note: this function needs to be called first, then call getTemperature to get the temperature reading
 MAX30102.prototype.set_temperature_read = function(){
-
   heart_sensor.write8(C.REG_TEMP_CONFIG, 0x01);
-
 };
 
 //gets a temperature reading from the MAX30102
