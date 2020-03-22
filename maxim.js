@@ -55,9 +55,11 @@ const C = {
 
 
 //object that holds all data to be used for HR/SpO2 functions
-//
-//
-//
+var register_data = {
+  buffer_length: 100,
+  ir_buffer: new Uint32Array(this.buffer_length),
+  red_buffer: new Uint32Array(this.buffer_length)
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Main functions to communicate with MAX30102 via I2C
@@ -118,11 +120,12 @@ MAX30102.prototype.init = function(){
 //in order to get heart rate/SpO2, use this function to collect data and then send collected data to saturate_data
 //let temp_data_array = new Uint32Array(100).fill(0);
 
-MAX30102.prototype.read_fifo_data = function(register_data, numSamples, digitalRead, interrupt_pin){
+MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
-  let temp_data_array = new Array(6);
+  let temp_data_array = new Uint8Array(6);
+  temp_data_array.ArrayBufferView.fill(0);
   
-  for(i=0;i<numSamples;++i){
+  for(i=0;i<register_data.buffer_length;i++){
     
     register_data.red_buffer[i] = 0;
     register_data.ir_buffer[i] = 0;
