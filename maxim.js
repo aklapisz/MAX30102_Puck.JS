@@ -147,30 +147,48 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   let temp_data_array = new Uint8Array(6);
   
+  var c = E.compiledC(`
+  //void parse_fifo_data(int, int, int, int)
+  void parse_fifo_data(int length, unsigned char *temp_data, unsigned char *ir_data, usigned char *red_data){
+    int i = 0;  
+    for(i=0;i<length;i++){
+      *(red_data+i) = *(temp_data+(i*6)) >> 16;
+      *(red_data+i) += *(temp_data+(i*6)+1) >> 8;
+      *(red_data+i) += *(temp_data+(i*6)+2);
+
+      *(ir_data+i) = *(temp_data+(i*6)+3) >> 16;
+      *(ir_data+i) += *(temp_data+(i*6)+4) >> 8;
+      *(ir_data+i) += *(temp_data+(i*6)+5);
+
+      *(red_data) &= 0x03FFFF;
+      *(ir_data) &= 0x03FFFF;
+    }
+  }
+  );
+  
   for(i=0;i<BUFFER_SIZE;i++){
     
     register_data.red_buffer[i] = 0;
     register_data.ir_buffer[i] = 0;
     
     while(digitalRead(interrupt_pin)==1)
-  
-    this.read8(C.REG_INTR_STATUS_1);
-    this.read8(C.REG_INTR_STATUS_2);
+    
+    this.i2c.writeTo(this.ad, C.REG_INTR_STATUS_1);
+    this.i2c.readFrom(this.ad,1);
+    
+    this.i2c.writeTo(this.ad, C.REG_INTR_STATUS_2));
+    this.i2c.readFrom(this.ad,1);
   
     this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
-    temp_data_array = this.i2c.readFrom(this.ad, 6);
-  
-    register_data.red_buffer[i] += (temp_data_array[0]<<16);
-    register_data.red_buffer[i] += (temp_data_array[1]<<8);
-    register_data.red_buffer[i] += temp_data_array[2];
-    register_data.red_buffer[i] &= 0x03FFFF;
-  
-    register_data.ir_buffer[i] += (temp_data_array[3]<<16);
-    register_data.ir_buffer[i] += (temp_data_array[4]<<8);
-    register_data.ir_buffer[i] += temp_data_array[5];
-    register_data.ir_buffer[i] &= 0x03FFFF;
+    temp_data_array[i*6] = this.i2c.readFrom(this.ad, 6);
     
   }
+  
+  var temp_addr = E.getAddressOf(temp_data_array);
+  var ir_addr = E.getAddressOf(register_data.ir_buffer);
+  var red_addr = E.getAddressOf(register_data.red_buffer);
+  
+  c.parse_fifo_data(BUFFER_SIZE, temp_addr, ir_addr, red_addr);
   
   for(i=0;i<100;++i){
     console.log(register_data.red_buffer[i]);
