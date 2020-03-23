@@ -147,7 +147,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   let temp_data_array = new Uint8Array(6);
   
-  var c = E.compiledC(`
+ var c = E.compiledC(`
   //void parse_fifo_data(int, int, int, int)
   void parse_fifo_data(int length, unsigned char *temp_data, unsigned char *ir_data, usigned char *red_data){
     int i = 0;  
@@ -164,7 +164,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
       *(ir_data) &= 0x03FFFF;
     }
   }
-  );
+  `);
   
   for(i=0;i<BUFFER_SIZE;i++){
     
