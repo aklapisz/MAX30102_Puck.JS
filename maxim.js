@@ -147,6 +147,8 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   let i = 0;
   let temp_data_array = new Array(BUFFER_SIZE);
+  let time = 0;
+  let prevTime = getTime();
   
   for(i=0;i<BUFFER_SIZE;i++){
     
@@ -160,6 +162,10 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
     this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
     temp_data_array[i] = this.i2c.readFrom(this.ad, 6);
+    
+    time = getTime();
+    console.log(time-prevTime);
+    prevTime = time;
     
   }
   
@@ -179,9 +185,9 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     
   }
   
-  for(i=0;i<100;++i){
-    console.log(register_data.red_buffer[i]);
-  }
+  //for(i=0;i<100;++i){
+  //  console.log(register_data.red_buffer[i]);
+  //}
   
   
 };
