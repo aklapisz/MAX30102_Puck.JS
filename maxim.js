@@ -180,7 +180,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   }
   
   for(i=0;i<100;++i){
-    console.log(temp_data_array[i]);
+    console.log(register_data.red_buffer[i]);
   }
   
   
