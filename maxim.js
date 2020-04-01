@@ -63,8 +63,8 @@ const C = {
 
 //object that holds all data to be used for HR/SpO2 functions
 let register_data = {
-  ir_buffer: new Uint32Array(BUFFER_SIZE),
-  red_buffer: new Uint32Array(BUFFER_SIZE)
+  ir_buffer: new Array(BUFFER_SIZE),
+  red_buffer: new Array(BUFFER_SIZE)
 };
 
 
@@ -127,8 +127,8 @@ MAX30102.prototype.init = function(){
   this.write8(C.REG_OVF_COUNTER, 0x00);  //OVF_COUNTER[4:0]
   this.write8(C.REG_FIFO_RD_PTR, 0x00);  //FIFO_RD_PTR[4:0]
   
-  this.write8(C.REG_FIFO_CONFIG, 0x01);  //sample avg = 0, fifo rollover=false, fifo almost full = 3
-  this.write8(C.REG_MODE_CONFIG,0x0f);  //0x02 for Red only, 0x03 for SpO2 mode 0x07 multimode LED
+  this.write8(C.REG_FIFO_CONFIG, 0x0f);  //sample avg = 0, fifo rollover=false, fifo almost full = 3
+  this.write8(C.REG_MODE_CONFIG,0x03);  //0x02 for Red only, 0x03 for SpO2 mode 0x07 multimode LED
   this.write8(C.REG_SPO2_CONFIG,0x27);  // SPO2_ADC range = 4096nA, SPO2 sample rate (100 Hz), LED pulseWidth (411uS)
     
   this.write8(C.REG_LED1_PA,0x24);  //Choose value for ~ 7mA for LED1
@@ -146,7 +146,7 @@ MAX30102.prototype.init = function(){
 MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   let i = 0;
-  let temp_data_array = new Uint8Array(6*BUFFER_SIZE);
+  let temp_data_array = new Array(6*BUFFER_SIZE);
   
   for(i=0;i<BUFFER_SIZE;i++){
     
