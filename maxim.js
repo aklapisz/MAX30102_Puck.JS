@@ -152,7 +152,11 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   for(i=0;i<BUFFER_SIZE;i++){
     
-    while(digitalRead(interrupt_pin)==1)
+    while(digitalRead(interrupt_pin)==1){
+      console.log("nope");
+    }
+    
+    console.log("si");
     
     this.i2c.writeTo(this.ad, C.REG_INTR_STATUS_1);
     this.i2c.readFrom(this.ad,1);
@@ -163,9 +167,9 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
     temp_data_array[i] = this.i2c.readFrom(this.ad, 6);
     
-    time = getTime();
-    console.log(time-prevTime);
-    prevTime = time;
+    //time = getTime();
+    //console.log(time-prevTime);
+    //prevTime = time;
     
   }
   
