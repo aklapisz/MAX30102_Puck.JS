@@ -63,8 +63,8 @@ const C = {
 
 //object that holds all data to be used for HR/SpO2 functions
 let register_data = {
-  ir_buffer: new Uint32Array(BUFFER_SIZE),
-  red_buffer: new Uint32Array(BUFFER_SIZE)
+  ir_buffer: new Array(BUFFER_SIZE),
+  red_buffer: new Array(BUFFER_SIZE)
 };
 
 
@@ -145,7 +145,7 @@ MAX30102.prototype.init = function(){
 
 MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
-  let temp_data_array = new Uint8Array(6*BUFFER_SIZE);
+  let temp_data_array = new Array(6*BUFFER_SIZE);
   
   for(i=0;i<BUFFER_SIZE;i++){
     
