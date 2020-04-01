@@ -145,6 +145,7 @@ MAX30102.prototype.init = function(){
 
 MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
+  let i = 0;
   let temp_data_array = new Array(6*BUFFER_SIZE);
   
   for(i=0;i<BUFFER_SIZE;i++){
@@ -165,16 +166,16 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   for(i=0;i<BUFFER_SIZE;i++){
     
-  register_data.red_buffer[i] = (temp_data_array[i]<<16);
-  register_data.red_buffer[i] += (temp_data_array[i+1]<<8);
-  register_data.red_buffer[i] += temp_data_array[i+2];
-  register_data.red_buffer[i] &= 0x03FFFF;
+    register_data.red_buffer[i] = (temp_data_array[i]<<16);
+    register_data.red_buffer[i] += (temp_data_array[i+1]<<8);
+    register_data.red_buffer[i] += temp_data_array[i+2];
+    register_data.red_buffer[i] &= 0x03FFFF;
   
   
-  register_data.ir_buffer[i] = (temp_data_array[i+3]<<16);
-  register_data.ir_buffer[i] += (temp_data_array[i+4]<<8);
-  register_data.ir_buffer[i] += temp_data_array[i+5];
-  register_data.ir_buffer[i] &= 0x03FFFF;
+    register_data.ir_buffer[i] = (temp_data_array[i+3]<<16);
+    register_data.ir_buffer[i] += (temp_data_array[i+4]<<8);
+    register_data.ir_buffer[i] += temp_data_array[i+5];
+    register_data.ir_buffer[i] &= 0x03FFFF;
     
   }
   
