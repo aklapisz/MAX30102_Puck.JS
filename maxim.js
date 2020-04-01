@@ -149,9 +149,6 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   for(i=0;i<BUFFER_SIZE;i++){
     
-    register_data.red_buffer[i] = 0;
-    register_data.ir_buffer[i] = 0;
-    
     while(digitalRead(interrupt_pin)==1)
     
     this.i2c.writeTo(this.ad, C.REG_INTR_STATUS_1);
