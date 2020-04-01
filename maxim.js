@@ -127,7 +127,7 @@ MAX30102.prototype.init = function(){
   this.write8(C.REG_OVF_COUNTER, 0x00);  //OVF_COUNTER[4:0]
   this.write8(C.REG_FIFO_RD_PTR, 0x00);  //FIFO_RD_PTR[4:0]
   
-  this.write8(C.REG_FIFO_CONFIG, 0x0f);  //sample avg = 4, fifo rollover=false, fifo almost full = 17
+  this.write8(C.REG_FIFO_CONFIG, 0x01);  //sample avg = 0, fifo rollover=false, fifo almost full = 3
   this.write8(C.REG_MODE_CONFIG,0x03);  //0x02 for Red only, 0x03 for SpO2 mode 0x07 multimode LED
   this.write8(C.REG_SPO2_CONFIG,0x27);  // SPO2_ADC range = 4096nA, SPO2 sample rate (100 Hz), LED pulseWidth (411uS)
     
@@ -145,26 +145,7 @@ MAX30102.prototype.init = function(){
 
 MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
-  let temp_data_array = new Uint8Array(6);
-  
- var c = E.compiledC(`
-  //void parse_fifo_data(int, int, int, int)
-  void parse_fifo_data(int length, unsigned char *temp_data, unsigned char *ir_data, usigned char *red_data){
-    int i = 0;  
-    for(i=0;i<length;i++){
-      *(red_data+i) = *(temp_data+(i*6)) >> 16;
-      *(red_data+i) += *(temp_data+(i*6)+1) >> 8;
-      *(red_data+i) += *(temp_data+(i*6)+2);
-
-      *(ir_data+i) = *(temp_data+(i*6)+3) >> 16;
-      *(ir_data+i) += *(temp_data+(i*6)+4) >> 8;
-      *(ir_data+i) += *(temp_data+(i*6)+5);
-
-      *(red_data) &= 0x03FFFF;
-      *(ir_data) &= 0x03FFFF;
-    }
-  }
-  `);
+  let temp_data_array = new Uint8Array(6*BUFFER_SIZE);
   
   for(i=0;i<BUFFER_SIZE;i++){
     
@@ -184,11 +165,20 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     
   }
   
-  var temp_addr = E.getAddressOf(temp_data_array);
-  var ir_addr = E.getAddressOf(register_data.ir_buffer);
-  var red_addr = E.getAddressOf(register_data.red_buffer);
   
-  c.parse_fifo_data(BUFFER_SIZE, temp_addr, ir_addr, red_addr);
+  for(i=0;i<BUFFER_SIZE;i++){
+    
+  register_data.red_buffer[i] += (temp_data_array[i]<<16);
+  register_data.red_buffer[i] += (temp_data_array[i+1]<<8);
+  register_data.red_buffer[i] += temp_data_array[i+2];
+  register_data.red_buffer[i] &= 0x03FFFF;
+  
+  register_data.ir_buffer[i] += (temp_data_array[i+3]<<16);
+  register_data.ir_buffer[i] += (temp_data_array[i+4]<<8);
+  register_data.ir_buffer[i] += temp_data_array[i+5];
+  register_data.ir_buffer[i] &= 0x03FFFF;
+    
+  }
   
   for(i=0;i<100;++i){
     console.log(register_data.red_buffer[i]);
