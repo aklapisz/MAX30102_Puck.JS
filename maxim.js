@@ -146,7 +146,7 @@ MAX30102.prototype.init = function(){
 MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   let i = 0;
-  let temp_data_array = new Array(6*BUFFER_SIZE);
+  let temp_data_array = new Array(BUFFER_SIZE);
   
   for(i=0;i<BUFFER_SIZE;i++){
     
@@ -159,22 +159,22 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     this.i2c.readFrom(this.ad,1);
   
     this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
-    temp_data_array[i*6] = this.i2c.readFrom(this.ad, 6);
+    temp_data_array[i] = this.i2c.readFrom(this.ad, 6);
     
   }
   
   
   for(i=0;i<BUFFER_SIZE;i++){
     
-    register_data.red_buffer[i] = (temp_data_array[i]<<16);
-    register_data.red_buffer[i] += (temp_data_array[i+1]<<8);
-    register_data.red_buffer[i] += temp_data_array[i+2];
+    register_data.red_buffer[i] = (temp_data_array[i][0]<<16);
+    register_data.red_buffer[i] += (temp_data_array[i][1]<<8);
+    register_data.red_buffer[i] += temp_data_array[i][2];
     register_data.red_buffer[i] &= 0x03FFFF;
   
   
-    register_data.ir_buffer[i] = (temp_data_array[i+3]<<16);
-    register_data.ir_buffer[i] += (temp_data_array[i+4]<<8);
-    register_data.ir_buffer[i] += temp_data_array[i+5];
+    register_data.ir_buffer[i] = (temp_data_array[i][3]<<16);
+    register_data.ir_buffer[i] += (temp_data_array[i][4]<<8);
+    register_data.ir_buffer[i] += temp_data_array[i][5];
     register_data.ir_buffer[i] &= 0x03FFFF;
     
   }
