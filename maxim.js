@@ -159,7 +159,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     
     while(digitalRead(interrupt_pin)==1)
       
-    while(Math.abs(time-prevTime) >= 0.04){
+    while(Math.abs(time-prevTime) >= 0.03){
       time = getTime();
     }
     
