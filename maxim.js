@@ -239,7 +239,7 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
 //Functions for HR/SpO2 calculation
 
 
-MAX30102.prototype.data_saturation = function(register_data, saturated_data){
+MAX30102.prototype.data_saturation = function(saturated_data){
 
   let k;
   let buffer_len = register_data.buffer_length;
