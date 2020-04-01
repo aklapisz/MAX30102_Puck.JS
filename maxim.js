@@ -127,7 +127,7 @@ MAX30102.prototype.init = function(){
   this.write8(C.REG_OVF_COUNTER, 0x00);  //OVF_COUNTER[4:0]
   this.write8(C.REG_FIFO_RD_PTR, 0x00);  //FIFO_RD_PTR[4:0]
   
-  this.write8(C.REG_FIFO_CONFIG, 0x1f);  //sample avg = 0, fifo rollover=false, fifo almost full = 3
+  this.write8(C.REG_FIFO_CONFIG, 0x4f);  //sample avg = 0, fifo rollover=false, fifo almost full = 3
   this.write8(C.REG_MODE_CONFIG,0x03);  //0x02 for Red only, 0x03 for SpO2 mode 0x07 multimode LED
   this.write8(C.REG_SPO2_CONFIG,0x27);  // SPO2_ADC range = 4096nA, SPO2 sample rate (100 Hz), LED pulseWidth (411uS)
     
@@ -147,7 +147,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   let i = 0;
   let temp_data_array = new Array(BUFFER_SIZE);
-  let tolerance = Number.EPSILON;
+  //let tolerance = Number.EPSILON;
   let time = 0.04;
   let prevTime = 0.0;
   
@@ -159,7 +159,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     
     while(digitalRead(interrupt_pin)==1)
       
-    while(Math.abs(time-prevTime) >= 0.04){
+    while(Math.abs(time-prevTime) > 0.01 && (time-prevTime) > 0.01){
       time = getTime();
     }
     
