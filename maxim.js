@@ -156,6 +156,10 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   for(i=0;i<BUFFER_SIZE;i++){
     
     //while(digitalRead(interrupt_pin)==1)
+    
+    this.write8(C.REG_FIFO_WR_PTR,0x00);  //FIFO_WR_PTR[4:0]
+    this.write8(C.REG_OVF_COUNTER, 0x00);  //OVF_COUNTER[4:0]
+    this.write8(C.REG_FIFO_RD_PTR, 0x00);  //FIFO_RD_PTR[4:0]
       
     while(Math.abs(time-prevTime) > 0.04 && (time-prevTime) > 0.04){
       time = getTime();
