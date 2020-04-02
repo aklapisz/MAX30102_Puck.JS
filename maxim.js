@@ -8,8 +8,9 @@ var saturated_data = {
   ch_hr_valid: false,
   temperature: 0
 };
-
 */
+
+E.setFlags({pretokenise:1});
 
 const ST = 4;
 const FS = 25;
@@ -121,7 +122,7 @@ MAX30102.prototype.reset = function(){
 MAX30102.prototype.init = function(){
   
   this.write8(C.REG_INTR_ENABLE_1, 0xc0); // INTR setting  
-  this.write8(C.REG_INTR_ENABLE_2, 0x02);
+  this.write8(C.REG_INTR_ENABLE_2, 0x02); // Add setting for temp reading
    
   this.write8(C.REG_FIFO_WR_PTR,0x00);  //FIFO_WR_PTR[4:0]
   this.write8(C.REG_OVF_COUNTER, 0x00);  //OVF_COUNTER[4:0]
@@ -151,9 +152,6 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   let time = 0.04;
   let prevTime = 0.0;
   
-  this.write8(C.REG_FIFO_WR_PTR,0x00);  //FIFO_WR_PTR[4:0]
-  this.write8(C.REG_OVF_COUNTER, 0x00);  //OVF_COUNTER[4:0]
-  this.write8(C.REG_FIFO_RD_PTR, 0x00);  //FIFO_RD_PTR[4:0]
   
   for(i=0;i<BUFFER_SIZE;i++){
     
@@ -176,7 +174,8 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
 
   }
   
-  let overflow = this.i2c.read8(0x05);
+  this.i2c.writeTo(this.ad, 0x05);
+  let overflow = this.i2c.readFrom(this.ad, 1);
   console.log(overflow);
   
   
