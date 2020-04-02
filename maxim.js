@@ -175,7 +175,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   }
   
   this.i2c.writeTo(this.ad, 0x05);
-  let overflow = this.i2c.readFrom(this.ad, 1);
+  let overflow = this.i2c.readFrom(this.ad, 1)[0];
   console.log(overflow);
   
   
