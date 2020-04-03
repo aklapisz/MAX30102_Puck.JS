@@ -1,3 +1,5 @@
+E.setFlags({pretokenise:1});
+
 //NOTE!!!
 /* In order to use this library properly, this object must be declared in the main code...
 
@@ -9,8 +11,6 @@ var saturated_data = {
   temperature: 0
 };
 */
-
-E.setFlags({pretokenise:1});
 
 const ST = 4;
 const FS = 25;
