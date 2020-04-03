@@ -148,7 +148,6 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   let i = 0;
   let temp_data_array = new Array(BUFFER_SIZE);
-  //let tolerance = Number.EPSILON;
   let time = 0.04;
   let prevTime = 0.0;
   
@@ -156,10 +155,6 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   for(i=0;i<BUFFER_SIZE;i++){
     
     while(digitalRead(interrupt_pin)==1)
-    
-    //this.write8(C.REG_FIFO_WR_PTR,0x00);  //FIFO_WR_PTR[4:0]
-    //this.write8(C.REG_OVF_COUNTER, 0x00);  //OVF_COUNTER[4:0]
-    //this.write8(C.REG_FIFO_RD_PTR, 0x00); 
       
     //while(Math.abs(time-prevTime) > 0.04 && (time-prevTime) > 0.04){
     //  time = getTime();
@@ -175,12 +170,6 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     temp_data_array[i] = this.i2c.readFrom(this.ad, 6);
     
     //prevTime = getTime();
-
-  }
-  
-  //this.i2c.writeTo(this.ad, 0x05);
-  //let overflow = this.i2c.readFrom(this.ad, 1)[0];
-  //console.log(overflow);
   
   
   for(i=0;i<BUFFER_SIZE;i++){
