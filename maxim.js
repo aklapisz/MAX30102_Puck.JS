@@ -154,7 +154,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   for(i=0;i<BUFFER_SIZE;i++){
     
-    while(digitalRead(interrupt_pin)==1)
+    while(digitalRead(interrupt_pin)==1);
       
     //while(Math.abs(time-prevTime) > 0.04 && (time-prevTime) > 0.04){
     //  time = getTime();
