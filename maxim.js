@@ -170,7 +170,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     temp_data_array[i] = this.i2c.readFrom(this.ad, 6);
     
     //prevTime = getTime();
-  
+  }
   
   for(i=0;i<BUFFER_SIZE;i++){
     
