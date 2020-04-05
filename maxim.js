@@ -245,7 +245,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
   let k;
   let buffer_len = register_data.buffer_length;
-  let f_ir_mean,f_red_mean = 0.0;
+  let f_ir_mean,f_red_mean;
   let xy_ratio;
   let x;
 
@@ -272,8 +272,8 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   
    console.log("Prcoesseded data: ");
    for(k=0;k<100;++k){
-    console.log(register_data.red_buffer[k]);
-    //console.log(processingData.an_x[k]);
+    //console.log(register_data.red_buffer[k]);
+    console.log(processingData.an_x[k]);
   } 
   
   
