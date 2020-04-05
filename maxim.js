@@ -187,9 +187,9 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     
   }
   
-  for(i=0;i<100;++i){
-    console.log(register_data.red_buffer[i]);
-  }
+  //for(i=0;i<100;++i){
+  //  console.log(register_data.red_buffer[i]);
+  //}
   
   
 };
@@ -265,8 +265,8 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   
 //remove DC from both buffers
   for(k=0; k<buffer_len; ++k){
-    processingData.an_y[k] = register_data.ir_buffer[k] - f_ir_mean;
-    processingData.an_x[k] = register_data.red_buffer[k] - f_red_mean;
+    processingData.an_x[k] = register_data.ir_buffer[k] - f_ir_mean;
+    processingData.an_y[k] = register_data.red_buffer[k] - f_red_mean;
   }
   
 //remove linear trend (baseline leveling)
@@ -275,6 +275,10 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.an_x[k] -= processingData.beta_ir * x;
     processingData.an_y[k] -= processingData.beta_red * x;
   }
+  
+   for(k=0;k<100;++k){
+    console.log(processingData.an_x[i]);
+  } 
 
 //Calculate RMS of both AC signals
   this.rms(buffer_len);
