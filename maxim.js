@@ -270,20 +270,20 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   }
   
 //remove linear trend (baseline leveling)
-  this.linear_regression_beta(processingData.an_y, processingData.an_x, mean_X, sum_X2);
+  this.linear_regression_beta();
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
     processingData.an_x[k] -= processingData.beta_ir * x;
     processingData.an_y[k] -= processingData.beta_red * x;
   }
 
 //Calculate RMS of both AC signals
-  this.rms(processingData.an_y, processingData.an_x, buffer_len);
+  this.rms(buffer_len);
 
 //Calculate Pearson correlation between red and IR
-  processingData.correl = this.Pcorrelation(processingData.an_y, processingData.an_x, buffer_len) / Math.sqrt(processingData.f_red_sumsq*processingData.f_ir_sumsq);
+  processingData.correl = this.Pcorrelation(buffer_len) / Math.sqrt(processingData.f_red_sumsq*processingData.f_ir_sumsq);
 
   if(processingData.correl >= min_pearson_correlation){
-    this.signal_periodicity(processingData.an_x, BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
+    this.signal_periodicity(BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
   }else processingData.n_last_peak_interval = 0;
 
   if(processingData.n_last_peak_interval != 0){
@@ -311,32 +311,32 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
 
 
-MAX30102.prototype.linear_regression_beta = function(an_y, an_x, xmean, sum_x2){
-  let x,k,beta = 0.0;
+MAX30102.prototype.linear_regression_beta = function(){
+  let x,beta = 0.0;
+  let k = 0;
+
+  for(x=-mean_X, k=0; x<=mean_X; ++x, ++k){
+    beta += x * processingData.an_x[k];
+  }
+  processingData.beta_ir = beta/sum_X2;
 
   beta = 0.0;
-  for(x=-xmean, k=0; x<=xmean; ++x, ++k){
-    beta += x * an_x[k];
+  for(x=-mean_X, k=0; x<=mean_X; ++x, ++k){
+    beta += x * processingData.an_y[k];
   }
-  processingData.beta_ir = beta/sum_x2;
-
-  beta = 0.0;
-  for(x=-xmean, k=0; x<=xmean; ++x, ++k){
-    beta += x * an_y[k];
-  }
-  processingData.beta_red = beta/sum_x2;
+  processingData.beta_red = beta/sum_X2;
 
 };
 
 
 
-MAX30102.prototype.autocorrelation = function(an_x, n_size, n_lag){
+MAX30102.prototype.autocorrelation = function(n_size, n_lag){
 
   let i, n_temp = n_size - n_lag;
   let sum = 0.0;
   if(n_temp<=0) return sum;
   for(i=0; i<n_temp; ++i){
-    sum += an_x[i] * an_x[i+n_lag];
+    sum += processingData.an_x[i] * processingData.an_x[i+n_lag];
   }
 
   return sum/n_temp;
@@ -345,43 +345,43 @@ MAX30102.prototype.autocorrelation = function(an_x, n_size, n_lag){
 
 
 
-MAX30102.prototype.rms = function(an_y, an_x, n_size){
+MAX30102.prototype.rms = function(n_size){
 
   let i;
 
   let r = 0.0;
   let sumsq = 0.0;
   for(i=0; i<n_size; ++i){
-    r = an_x[i];
+    r = processingData.an_x[i];
     sumsq += r * r;
   }
   sumsq /= n_size;
-  processingData.f_ir_sumsq = processingData.f_x_ac = Math.sqrt(sumsq);
+  processingData.f_ir_sumsq, processingData.f_x_ac = Math.sqrt(sumsq);
 
 
   r = 0.0;
   sumsq = 0.0;
   for(i=0; i<n_size; ++i){
-    r = an_y[i];
+    r = processingData.an_y[i];
     sumsq += r * r;
   }
   sumsq /= n_size;
-  processingData.f_red_sumsq = processingData.f_y_ac = Math.sqrt(sumsq);
+  processingData.f_red_sumsq, processingData.f_y_ac = Math.sqrt(sumsq);
 
 };
 
 
 
-MAX30102.prototype.Pcorrelation = function(an_y, an_x, n_size){
+MAX30102.prototype.Pcorrelation = function(n_size){
 
   let i;
   let r = 0.0;
 
   for(i=0; i<n_size; ++i){
-    r += an_x[i] * an_y[i];
+    r += processingData.an_x[i] * processingData.an_y[i];
   }
 
-  processingData.correl = r/n_size;
+  return r/n_size;
 
 };
 
@@ -391,20 +391,20 @@ MAX30102.prototype.Pcorrelation = function(an_y, an_x, n_size){
 //signal_periodicity(processingData, BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio); -js
 
 
-MAX30102.prototype.signal_periodicity = function(an_x, n_size, n_min_distance, n_max_distance, min_autocorrelation_ratio){
+MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_distance, min_autocorrelation_ratio){
 
   let n_lag;
   let aut,aut_left,aut_right,aut_save = 0.0;
   let left_limit_reached = false;
 
   n_lag = processingData.n_last_peak_interval;
-  aut_save = aut = this.autocorrelation(an_x, n_size, n_lag);
+  aut_save, aut = this.autocorrelation(n_size, n_lag);
   aut_left = aut;
   do{
     aut=aut_left;
     n_lag--;
-    aut_left = this.autocorrelation(an_x, n_size, n_lag);
-  } while(aut_left > aut && n_lag > n_min_distance);
+    aut_left = this.autocorrelation(n_size, n_lag);
+  } while(aut_left > (aut && n_lag) > n_min_distance);
 
   if(n_lag == n_min_distance){
     left_limit_reached = true;
@@ -417,12 +417,12 @@ MAX30102.prototype.signal_periodicity = function(an_x, n_size, n_min_distance, n
     do{
       aut = aut_right;
       n_lag++;
-      aut_right = this.autocorrelation(an_x, n_size, n_lag);
-    } while(aut_right > aut && n_lag < n_max_distance);
+      aut_right = this.autocorrelation(n_size, n_lag);
+    } while(aut_right > (aut && n_lag) < n_max_distance);
 
     if(n_lag == n_max_distance) n_lag = 0;
     else n_lag--;
-    if(n_lag == processingData.n_last_peak_interval && left_limit_reached) n_lag = 0;
+    if(n_lag == (processingData.n_last_peak_interval && left_limit_reached)) n_lag = 0;
   }
 
   processingData.ratio = aut / processingData.f_ir_sumsq;
