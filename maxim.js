@@ -68,7 +68,6 @@ let register_data = {
   red_buffer: new Array(BUFFER_SIZE)
 };
 
-let an = new Uint32Array(10);
 
 let processingData = {
   an_x: new Array(BUFFER_SIZE).fill(0),
@@ -270,10 +269,13 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.an_y[k] = register_data.red_buffer[k] - f_red_mean;
   }
   
+  
    console.log("Prcoesseded data: ");
    for(k=0;k<100;++k){
-    console.log(processingData.an_x[k]);
+    console.log(register_data.red_buffer[i]);
+    //console.log(processingData.an_x[k]);
   } 
+  
   
 //remove linear trend (baseline leveling)
   this.linear_regression_beta();
