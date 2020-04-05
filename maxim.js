@@ -258,6 +258,9 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     f_ir_mean += register_data.ir_buffer[k];
     f_red_mean += register_data.red_buffer[k];
   }
+  
+  console.log("Prcoesseded data: ");
+  console.log(f_red_mean);
 
   f_ir_mean = f_ir_mean/buffer_len;
   f_red_mean = f_red_mean/buffer_len;
@@ -270,10 +273,10 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   }
   
   
-   console.log("Prcoesseded data: ");
-   for(k=0;k<100;++k){
+   //console.log("Prcoesseded data: ");
+   //for(k=0;k<100;++k){
     //console.log(register_data.red_buffer[k]);
-    console.log(processingData.an_x[k]);
+  //  console.log(processingData.an_x[k]);
   } 
   
   
