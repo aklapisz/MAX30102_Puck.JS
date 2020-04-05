@@ -70,8 +70,8 @@ let register_data = {
 
 
 let processingData = {
-  an_x: new Array(BUFFER_SIZE),
-  an_y: new Array(BUFFER_SIZE),
+  an_x: new Uint32Array(BUFFER_SIZE).fill(0),
+  an_y: new Unit32Array(BUFFER_SIZE).fill(0),
   beta_ir: 0.0,
   beta_red: 0.0,
   f_ir_sumsq: 0.0,
