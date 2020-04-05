@@ -276,8 +276,10 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.an_y[k] -= processingData.beta_red * x;
   }
   
+  
+  console.log("Prcoesseded data: ");
    for(k=0;k<100;++k){
-    console.log(processingData.an_x[i]);
+    console.log(processingData.an_x[k]);
   } 
 
 //Calculate RMS of both AC signals
