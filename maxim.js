@@ -290,10 +290,9 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   processingData.correl = this.Pcorrelation(buffer_len) / parseFloat(Math.sqrt(processingData.f_y_ac*processingData.f_x_ac));
   
   
- console.log(processingData.correl);
-  
   if(processingData.correl >= min_pearson_correlation){
     this.signal_periodicity(BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
+     console.log("here");
   }else processingData.n_last_peak_interval = 0;
 
   if(processingData.n_last_peak_interval != 0){
