@@ -74,8 +74,6 @@ let processingData = {
   an_y: new Array(BUFFER_SIZE).fill(0),
   beta_ir: 0.0,
   beta_red: 0.0,
-  f_ir_sumsq: 0.0,
-  f_red_sumsq: 0.0,
   f_y_ac: 0.0,
   f_x_ac: 0.0,
   n_last_peak_interval: INIT_INTERVAL,
@@ -273,10 +271,9 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   this.rms(buffer_len);
   
   console.log(processingData.f_y_ac);
-  console.log(processingData.f_ir_sumsq);
 
 //Calculate Pearson correlation between red and IR
-  processingData.correl = this.Pcorrelation(buffer_len) / Math.sqrt(processingData.f_red_sumsq*processingData.f_ir_sumsq);
+  processingData.correl = this.Pcorrelation(buffer_len) / Math.sqrt(processingData.f_y_ac*processingData.f_x_ac);
 
   if(processingData.correl >= min_pearson_correlation){
     this.signal_periodicity(BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
@@ -352,7 +349,6 @@ MAX30102.prototype.rms = function(n_size){
     sumsq += r * r;
   }
   sumsq /= n_size;
-  processingData.f_ir_sumsq = Math.sqrt(sumsq);
   processingData.f_x_ac = Math.sqrt(sumsq);
 
 
@@ -363,7 +359,6 @@ MAX30102.prototype.rms = function(n_size){
     sumsq += r * r;
   }
   sumsq /= n_size;
-  processingData.f_red_sumsq = Math.sqrt(sumsq);
   processingData.f_y_ac = Math.sqrt(sumsq);
 };
 
