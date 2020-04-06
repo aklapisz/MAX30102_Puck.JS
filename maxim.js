@@ -344,8 +344,8 @@ MAX30102.prototype.rms = function(n_size){
 
   let i;
 
-  let r = 0.0;
-  let sumsq = 0.0;
+  let r = 0;
+  let sumsq = 0;
   for(i=0; i<n_size; ++i){
     r = processingData.an_x[i];
     sumsq += r * r;
