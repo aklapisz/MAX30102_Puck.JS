@@ -261,17 +261,15 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   
 //remove linear trend (baseline leveling)
   this.linear_regression_beta();
+  console.log(processingData.beta_red);
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
     processingData.an_x[k] -= processingData.beta_ir * x;
     processingData.an_y[k] -= processingData.beta_red * x;
   }
-
+  
 
 //Calculate RMS of both AC signals
   this.rms(buffer_len);
-  
-    console.log(processingData.f_y_ac);
-    console.log(processingData.f_x_ac);
 
 //Calculate Pearson correlation between red and IR
   processingData.correl = this.Pcorrelation(buffer_len) / Math.sqrt(processingData.f_y_ac*processingData.f_x_ac);
