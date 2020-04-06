@@ -277,7 +277,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
    //for(k=0;k<100;++k){
     //console.log(register_data.red_buffer[k]);
   //  console.log(processingData.an_x[k]);
-  } 
+  //} 
   
   
 //remove linear trend (baseline leveling)
