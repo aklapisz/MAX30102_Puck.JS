@@ -278,11 +278,6 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.an_y[k] -= parseFloat(processingData.beta_red * x);
   }
   
-  for(k=0;k<buffer_len;++k){
-    console.log(processingData.an_y[k]);
-  }
-  
- /* 
 //Calculate RMS of both AC signals
   this.rms(buffer_len);
 
@@ -317,7 +312,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   }
   
   console.log("end algorithm");
-*/
+  
 };
 
 
@@ -429,7 +424,10 @@ MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_d
     aut=aut_left;
     n_lag--;
     aut_left = this.autocorrelation(n_size, n_lag);
+    console.log("here in function");
   } while(aut_left > (aut && n_lag) > n_min_distance);
+  
+  console.log("out of for loop");
 
   if(n_lag == n_min_distance){
     left_limit_reached = true;
