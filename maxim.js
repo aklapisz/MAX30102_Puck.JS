@@ -270,17 +270,15 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.an_y[k] = register_data.red_buffer[k] - f_red_mean;
   }
   
-  for(k=0;k<buffer_len;++k){
-    console.log(register_data.ir_buffer[k]);
-  }
-  console.log("Mean: " + f_ir_mean);
-  
-  
 //remove linear trend (baseline leveling)
   this.linear_regression_beta();
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
     processingData.an_x[k] -= parseFloat(processingData.beta_ir * x);
     processingData.an_y[k] -= parseFloat(processingData.beta_red * x);
+  }
+  
+  for(k=0;k<buffer_len;++k){
+    console.log(processingData.an_y[k]);
   }
   
 //Calculate RMS of both AC signals
