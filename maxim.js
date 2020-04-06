@@ -23,6 +23,13 @@ const BUFFER_SIZE = FS * ST;
 const FS60 = FS * 60;
 const INIT_INTERVAL = FS60/TYPICAL_HR;
 
+const LOWEST_PERIOD = FS60/MAX_HR;
+const HIGHEST_PERIOD = FS60/MIN_HR;
+const mean_X = (BUFFER_SIZE-1)/2.0;
+const min_autocorrelation_ratio = 0.5;
+const min_pearson_correlation = 0.8;
+const sum_X2 = 83325.00;
+
 
 //object that holds all relavant register addresses on the MAX30102
 const C = {
