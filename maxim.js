@@ -238,10 +238,13 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   let xy_ratio;
   let x;
   
-  f_ir_mean = f_ir_mean <<16;
-  f_ir_mean = f_ir_mean >> 16;
-  f_red_mean = f_red_mean << 16;
-  f_red_mean = f_red_mean >> 16;
+  
+  f_ir_mean = Math.fround(f_ir_mean);
+  f_red_mean = Math.fround(f_red_mean);
+  //f_ir_mean = f_ir_mean <<16;
+  //f_ir_mean = f_ir_mean >> 16;
+  //f_red_mean = f_red_mean << 16;
+  //f_red_mean = f_red_mean >> 16;
   //processingData.beta_ir = processingData.beta_ir<<16;
   //processingData.beta_ir = processingData.beta_ir>>16;
   //processingData.beta_red = processingData.beta_red << 16;
