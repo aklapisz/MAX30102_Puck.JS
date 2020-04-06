@@ -20,6 +20,7 @@ const MIN_HR = 40;
 const TYPICAL_HR = 60;
 
 const BUFFER_SIZE = FS * ST;
+const FS60 = FS * 60;
 const INIT_INTERVAL = FS60/TYPICAL_HR;
 
 
@@ -235,7 +236,6 @@ let processingData = {
 
 MAX30102.prototype.data_saturation = function(saturated_data){
   
-  const FS60 = FS * 60;
   const LOWEST_PERIOD = FS60/MAX_HR;
   const HIGHEST_PERIOD = FS60/MIN_HR;
   const mean_X = (BUFFER_SIZE-1)/2.0;
