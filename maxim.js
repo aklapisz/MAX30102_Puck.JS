@@ -242,10 +242,10 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
 
 //calculate DC mean of ir and red buffers
-console.log(register_data.ir_buffer[k]);
   for(k=0; k<buffer_len; ++k){ 
     f_ir_mean += register_data.ir_buffer[k];
     f_red_mean += register_data.red_buffer[k];
+    console.log(register_data.ir_buffer[k]);
   }
 
   f_ir_mean = f_ir_mean/buffer_len;
