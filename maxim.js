@@ -401,7 +401,7 @@ MAX30102.prototype.Pcorrelation = function(n_size){
 };
 
 
-MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_distance, min_autocorrelation_ratio){
+MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_distance, min_aut_ratio){
 
   let n_lag;
   let aut,aut_left,aut_right,aut_save = 0;
