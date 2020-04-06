@@ -249,11 +249,13 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   processingData.beta_red = processingData.beta_red << 16;
   processingData.beta_red = processingData.beta_red >> 16;
   processingData.f_y_ac = processingData.f_y_ac << 16;
+  processingData.f_y_ac = processingData.f_x_ac >> 16;
+  processingData.f_x_ac = processingData.f_x_ac << 16;
   processingData.f_x_ac = processingData.f_x_ac >> 16;
-  //f_x_ac: 0,
-  //n_last_peak_interval: INIT_INTERVAL,
-  //ratio: 0,
-  //correl: 0
+  processingData.ratio = processingData.ratio << 16;
+  processingData.ratio = processingData.ratio >> 16;
+  processingData.correl = processingData.correl << 16;
+  processingData.correl = processingData.correl >> 16;
 
   processingData.n_last_peak_interval = INIT_INTERVAL;
 
