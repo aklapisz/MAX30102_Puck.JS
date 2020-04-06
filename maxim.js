@@ -287,7 +287,6 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   
   if(processingData.correl >= min_pearson_correlation){
     this.signal_periodicity(BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
-     console.log("here");
   }else processingData.n_last_peak_interval = 0;
 
   if(processingData.n_last_peak_interval != 0){
@@ -437,10 +436,7 @@ MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_d
       aut = aut_right;
       n_lag++;
       aut_right = this.autocorrelation(n_size, n_lag);
-      console.log(aut_right + "   " + n_lag);
     } while(aut_right>aut && n_lag<n_max_distance);
-    
-    console.log("out of for loop");
 
     if(n_lag == n_max_distance) n_lag = 0;
     else n_lag--;
