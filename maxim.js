@@ -401,7 +401,7 @@ MAX30102.prototype.Pcorrelation = function(n_size){
     r += processingData.an_x[i] * processingData.an_y[i];
   }
 
-  console.log(parseFloat(r/n_size);
+  console.log(parseFloat(r/n_size));
   return parseFloat(r/n_size);
 
 };
