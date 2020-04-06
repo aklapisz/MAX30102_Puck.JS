@@ -267,13 +267,12 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.an_x[k] -= processingData.beta_ir * x;
     processingData.an_y[k] -= processingData.beta_red * x;
   }
-  
-  for(k=0;k<buffer_len;++k){
-   console.log(processingData.an_y[k]);
-  } 
+
 
 //Calculate RMS of both AC signals
   this.rms(buffer_len);
+  
+  console.log(processingData.f_y_ac);
 
 //Calculate Pearson correlation between red and IR
   processingData.correl = this.Pcorrelation(buffer_len) / Math.sqrt(processingData.f_red_sumsq*processingData.f_ir_sumsq);
@@ -380,11 +379,6 @@ MAX30102.prototype.Pcorrelation = function(n_size){
   return r/n_size;
 
 };
-
-
-//rf_signal_periodicity(float *pn_x, int32_t n_size, int32_t *p_last_periodicity, int32_t n_min_distance, int32_t n_max_distance, float min_aut_ratio, float aut_lag0, float *ratio)   -function statement
-//rf_signal_periodicity(an_x, BUFFER_SIZE, &n_last_peak_interval, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio, f_ir_sumsq, ratio);
-//signal_periodicity(processingData, BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio); -js
 
 
 MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_distance, min_autocorrelation_ratio){
