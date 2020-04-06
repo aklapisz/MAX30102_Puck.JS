@@ -438,7 +438,7 @@ MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_d
       aut = aut_right;
       n_lag++;
       aut_right = this.autocorrelation(n_size, n_lag);
-      console.log("here in function");
+      console.log(aut_right + "   " + n_lag);
     } while(aut_right > (aut && n_lag) < n_max_distance);
     
     console.log("out of for loop");
