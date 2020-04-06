@@ -252,7 +252,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   
 //remove DC from both buffers
   for(k=0; k<buffer_len; ++k){
-    console.log(f_ir_mean);
+    console.log(parseFloat(f_ir_mean));
     processingData.an_x[k] = register_data.ir_buffer[k] - f_ir_mean;
     processingData.an_y[k] = register_data.red_buffer[k] - f_red_mean;
   }
