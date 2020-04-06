@@ -280,7 +280,9 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   
 //Calculate RMS of both AC signals
   this.rms(buffer_len);
-
+  
+  console.log("rms: " + processingData.f_y_ac);
+/*
 //Calculate Pearson correlation between red and IR
   processingData.correl = this.Pcorrelation(buffer_len) / parseFloat(Math.sqrt(processingData.f_y_ac*processingData.f_x_ac));
   
@@ -312,7 +314,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   }
   
   console.log("end algorithm");
-  
+  */
 };
 
 
