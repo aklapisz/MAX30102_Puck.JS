@@ -237,6 +237,19 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   let f_ir_mean,f_red_mean = 0;
   let xy_ratio;
   let x;
+  
+  f_ir_mean = f_ir_mean <<16;
+  f_ir_mean = f_ir_mean >> 16;
+  f_red_mean = f_red_mean << 16;
+  f_red_mean = f_red_mean >> 16;
+  //processingData.beta_ir = processingData.beta_ir<<16;
+  //processingData.beta_ir = processingData.beta_ir>>16;
+  //processingData.beta_red = processingData.beta_red << 16;
+  //processingData.f_y_ac = processingData,
+  //f_x_ac: 0,
+  //n_last_peak_interval: INIT_INTERVAL,
+  //ratio: 0,
+  //correl: 0
 
   processingData.n_last_peak_interval = INIT_INTERVAL;
 
@@ -258,10 +271,10 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.an_y[k] = parseFloat(register_data.red_buffer[k] - f_red_mean);
   }
   
-  console.log("processed data");
-  for(k=0;k<buffer_len;++k){
-    console.log(processingData.an_x[k]);
-  }
+  //console.log("processed data");
+  //for(k=0;k<buffer_len;++k){
+  //  console.log(processingData.an_x[k]);
+  //}
 
   
 //remove linear trend (baseline leveling)
