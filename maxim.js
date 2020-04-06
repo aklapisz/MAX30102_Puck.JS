@@ -284,11 +284,12 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
 //Calculate RMS of both AC signals
   this.rms(buffer_len);
-
- console.log(processingData.f_y_ac);
   
 //Calculate Pearson correlation between red and IR
   processingData.correl = this.Pcorrelation(buffer_len) / parseFloat(Math.sqrt(processingData.f_y_ac*processingData.f_x_ac));
+  
+  
+ console.log(processingData.correl);
   
   if(processingData.correl >= min_pearson_correlation){
     this.signal_periodicity(BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
