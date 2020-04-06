@@ -249,7 +249,6 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
   f_ir_mean = parseFloat(f_ir_mean)/buffer_len;
   f_red_mean = parseFloat(f_red_mean)/buffer_len;
-  console.log(f_red_mean);
   
 //remove DC from both buffers
   for(k=0; k<buffer_len; ++k){
@@ -257,9 +256,9 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.an_y[k] = register_data.red_buffer[k] - f_red_mean;
   }
   
-  //for(k=0;k<buffer_len;++k){
-  //  console.log(processingData.an_x[k]);
-  //}
+  for(k=0;k<buffer_len;++k){
+    console.log(processingData.an_x[k]);
+  }
 
   
 //remove linear trend (baseline leveling)
