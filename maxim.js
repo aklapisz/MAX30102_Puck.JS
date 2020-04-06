@@ -369,7 +369,7 @@ MAX30102.prototype.rms = function(n_size){
   }
   sumsq /= n_size;
   processingData.f_x_ac = Math.sqrt(sumsq);
-
+  processingData.f_x_ac = parseFloat(processingData.f_x_ac);
 
   r = 0.0;
   sumsq = 0.0;
@@ -379,6 +379,7 @@ MAX30102.prototype.rms = function(n_size){
   }
   sumsq /= n_size;
   processingData.f_y_ac = Math.sqrt(sumsq);
+  processingData.f_y_ac = parseFloat(processingData.f_y_ac);
 };
 
 
