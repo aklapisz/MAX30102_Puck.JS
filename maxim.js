@@ -62,6 +62,20 @@ let register_data = {
 };
 
 
+let processingData = {
+  an_x: new Array(BUFFER_SIZE).fill(0),
+  an_y: new Array(BUFFER_SIZE).fill(0),
+  beta_ir: 0.0,
+  beta_red: 0.0,
+  f_ir_sumsq: 0.0,
+  f_red_sumsq: 0.0,
+  f_y_ac: 0.0,
+  f_x_ac: 0.0,
+  n_last_peak_interval: INIT_INTERVAL,
+  ratio: 0,
+  correl: 0
+};
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Main functions to communicate with MAX30102 via I2C
@@ -219,29 +233,7 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
 //Functions for HR/SpO2 calculation
 
 
-let processingData = {
-  an_x: new Array(BUFFER_SIZE).fill(0),
-  an_y: new Array(BUFFER_SIZE).fill(0),
-  beta_ir: 0.0,
-  beta_red: 0.0,
-  f_ir_sumsq: 0.0,
-  f_red_sumsq: 0.0,
-  f_y_ac: 0.0,
-  f_x_ac: 0.0,
-  n_last_peak_interval: INIT_INTERVAL,
-  ratio: 0,
-  correl: 0
-};
-
-
 MAX30102.prototype.data_saturation = function(saturated_data){
-  
-  const LOWEST_PERIOD = FS60/MAX_HR;
-  const HIGHEST_PERIOD = FS60/MIN_HR;
-  const mean_X = (BUFFER_SIZE-1)/2.0;
-  const min_autocorrelation_ratio = 0.5;
-  const min_pearson_correlation = 0.8;
-  const sum_X2 = 83325.00;
   
   let k;
   let buffer_len = BUFFER_SIZE;
