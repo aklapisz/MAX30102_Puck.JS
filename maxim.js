@@ -244,7 +244,7 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
 MAX30102.prototype.data_saturation = function(saturated_data){
 
   let k;
-  let buffer_len = register_data.buffer_length;
+  let buffer_len = BUFFER_SIZE;
   let f_ir_mean,f_red_mean = 0;
   let xy_ratio;
   let x;
