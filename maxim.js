@@ -238,17 +238,17 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   let xy_ratio;
   let x;
   
-  
-  f_ir_mean = Math.fround(f_ir_mean);
-  f_red_mean = Math.fround(f_red_mean);
-  //f_ir_mean = f_ir_mean <<16;
-  //f_ir_mean = f_ir_mean >> 16;
-  //f_red_mean = f_red_mean << 16;
-  //f_red_mean = f_red_mean >> 16;
-  //processingData.beta_ir = processingData.beta_ir<<16;
-  //processingData.beta_ir = processingData.beta_ir>>16;
-  //processingData.beta_red = processingData.beta_red << 16;
-  //processingData.f_y_ac = processingData,
+
+  f_ir_mean = f_ir_mean <<16;
+  f_ir_mean = f_ir_mean >> 16;
+  f_red_mean = f_red_mean << 16;
+  f_red_mean = f_red_mean >> 16;
+  processingData.beta_ir = processingData.beta_ir<<16;
+  processingData.beta_ir = processingData.beta_ir>>16;
+  processingData.beta_red = processingData.beta_red << 16;
+  processingData.beta_red = processingData.beta_red >> 16;
+  processingData.f_y_ac = processingData.f_y_ac << 16;
+  processingData.f_x_ac = processingData.f_x_ac >> 16;
   //f_x_ac: 0,
   //n_last_peak_interval: INIT_INTERVAL,
   //ratio: 0,
@@ -265,19 +265,21 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
   f_ir_mean = parseFloat(f_ir_mean)/buffer_len;
   f_red_mean = parseFloat(f_red_mean)/buffer_len;
-  console.log("blah");
-  console.log(f_ir_mean);
+
   
 //remove DC from both buffers
   for(k=0; k<buffer_len; ++k){
-    processingData.an_x[k] = parseFloat(register_data.ir_buffer[k] - f_ir_mean);
-    processingData.an_y[k] = parseFloat(register_data.red_buffer[k] - f_red_mean);
+    processingData.an_x[k] = register_data.ir_buffer[k] - f_ir_mean;
+    processingData.an_y[k] = register_data.red_buffer[k] - f_red_mean;
   }
   
-  //console.log("processed data");
-  //for(k=0;k<buffer_len;++k){
-  //  console.log(processingData.an_x[k]);
-  //}
+  //console.log("blah");
+  //console.log(processingData.an_x);
+  
+  console.log("processed data");
+  for(k=0;k<buffer_len;++k){
+    console.log(processingData.an_x[k]);
+  }
 
   
 //remove linear trend (baseline leveling)
