@@ -72,10 +72,10 @@ let register_data = {
 let processingData = {
   an_x: new Array(BUFFER_SIZE).fill(0),
   an_y: new Array(BUFFER_SIZE).fill(0),
-  beta_ir: 0.0,
-  beta_red: 0.0,
-  f_y_ac: 0.0,
-  f_x_ac: 0.0,
+  beta_ir: 0,
+  beta_red: 0,
+  f_y_ac: 0,
+  f_x_ac: 0,
   n_last_peak_interval: INIT_INTERVAL,
   ratio: 0,
   correl: 0
