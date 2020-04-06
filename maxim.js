@@ -262,9 +262,9 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 //remove linear trend (baseline leveling)
   this.linear_regression_beta();
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
+    console.log(processingData.an_x[k]);
     processingData.an_x[k] -= processingData.beta_ir * x;
     processingData.an_y[k] -= processingData.beta_red * x;
-    console.log(processingData.an_x[k]);
   }
   
 
