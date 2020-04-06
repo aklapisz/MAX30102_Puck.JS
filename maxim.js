@@ -279,7 +279,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   }
   
   for(k=0;k<buffer_len;++k){
-    console.log("processingData.an_y[k]");
+    console.log(processingData.an_y[k]);
   }
   
  /* 
