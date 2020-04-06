@@ -147,17 +147,10 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   let i = 0;
   let temp_data_array = new Array(BUFFER_SIZE);
-  let time = 0.04;
-  let prevTime = 0.0;
-  
   
   for(i=0;i<BUFFER_SIZE;i++){
     
     while(digitalRead(interrupt_pin)==1);
-      
-    //while(Math.abs(time-prevTime) > 0.04 && (time-prevTime) > 0.04){
-    //  time = getTime();
-    //}
     
     this.i2c.writeTo(this.ad, C.REG_INTR_STATUS_1);
     this.i2c.readFrom(this.ad,1);
@@ -166,10 +159,9 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     this.i2c.readFrom(this.ad,1);
   
     this.i2c.writeTo(this.ad, C.REG_FIFO_DATA);
-    temp_data_array[i] = this.i2c.readFrom(this.ad, 6);
-    
-    //prevTime = getTime();
+    temp_data_array[i] = this.i2c.readFrom(this.ad, 6);   
   }
+  
   
   for(i=0;i<BUFFER_SIZE;i++){
     
@@ -257,9 +249,6 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     f_ir_mean += register_data.ir_buffer[k];
     f_red_mean += register_data.red_buffer[k];
   }
-  
-  console.log("Prcoesseded data: ");
-  console.log(f_red_mean);
 
   f_ir_mean = f_ir_mean/buffer_len;
   f_red_mean = f_red_mean/buffer_len;
@@ -272,11 +261,11 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   }
   
   
-   //console.log("Prcoesseded data: ");
-   //for(k=0;k<100;++k){
+   console.log("Prcoesseded data: ");
+   for(k=0;k<100;++k){
     //console.log(register_data.red_buffer[k]);
-  //  console.log(processingData.an_x[k]);
-  //} 
+    console.log(processingData.an_x[k]);
+  } 
   
   
 //remove linear trend (baseline leveling)
