@@ -305,7 +305,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
 
 MAX30102.prototype.linear_regression_beta = function(){
-  let x,beta = 0.0;
+  let x,beta = 0;
   let k = 0;
 
   for(x=-mean_X, k=0; x<=mean_X; ++x, ++k){
@@ -313,7 +313,7 @@ MAX30102.prototype.linear_regression_beta = function(){
   }
   processingData.beta_ir = beta/sum_X2;
 
-  beta = 0.0;
+  beta = 0;
   for(x=-mean_X, k=0; x<=mean_X; ++x, ++k){
     beta += x * processingData.an_y[k];
   }
