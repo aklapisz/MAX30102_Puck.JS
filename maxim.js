@@ -239,6 +239,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   let x;
   
 
+  
   f_ir_mean = f_ir_mean <<16;
   f_ir_mean = f_ir_mean >> 16;
   f_red_mean = f_red_mean << 16;
@@ -281,7 +282,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     console.log(processingData.an_x[k]);
   }
 
-  
+    console.log("linear regression algorithm");
 //remove linear trend (baseline leveling)
   this.linear_regression_beta();
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
@@ -289,6 +290,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.an_y[k] -= processingData.beta_red * x;
   }
   
+    console.log("rms algorithm");
 
 //Calculate RMS of both AC signals
   this.rms(buffer_len);
@@ -321,6 +323,8 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     saturated_data.n_spo2 = -999;
     saturated_data.ch_spo2_valid = 0;
   }
+  
+  console.log("end algorithm");
 
 };
 
