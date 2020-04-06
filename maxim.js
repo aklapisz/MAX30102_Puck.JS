@@ -229,6 +229,19 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Functions for HR/SpO2 calculation
 
+  processingData.beta_ir = processingData.beta_ir<<1;
+  processingData.beta_ir = processingData.beta_ir>>1;
+  processingData.beta_red = processingData.beta_red << 1;
+  processingData.beta_red = processingData.beta_red >> 1;
+  processingData.f_y_ac = processingData.f_y_ac << 1;
+  processingData.f_y_ac = processingData.f_x_ac >> 1;
+  processingData.f_x_ac = processingData.f_x_ac << 1;
+  processingData.f_x_ac = processingData.f_x_ac >> 1;
+  processingData.ratio = processingData.ratio << 1;
+  processingData.ratio = processingData.ratio >> 1;
+  processingData.correl = processingData.correl << 1;
+  processingData.correl = processingData.correl >> 1;
+
 
 MAX30102.prototype.data_saturation = function(saturated_data){
   
@@ -238,24 +251,10 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   let xy_ratio;
   let x;
   
-
-  
-  f_ir_mean = f_ir_mean <<16;
-  f_ir_mean = f_ir_mean >> 16;
-  f_red_mean = f_red_mean << 16;
-  f_red_mean = f_red_mean >> 16;
-  processingData.beta_ir = processingData.beta_ir<<16;
-  processingData.beta_ir = processingData.beta_ir>>16;
-  processingData.beta_red = processingData.beta_red << 16;
-  processingData.beta_red = processingData.beta_red >> 16;
-  processingData.f_y_ac = processingData.f_y_ac << 16;
-  processingData.f_y_ac = processingData.f_x_ac >> 16;
-  processingData.f_x_ac = processingData.f_x_ac << 16;
-  processingData.f_x_ac = processingData.f_x_ac >> 16;
-  processingData.ratio = processingData.ratio << 16;
-  processingData.ratio = processingData.ratio >> 16;
-  processingData.correl = processingData.correl << 16;
-  processingData.correl = processingData.correl >> 16;
+  f_ir_mean = f_ir_mean <<1;
+  f_ir_mean = f_ir_mean >> 1;
+  f_red_mean = f_red_mean << 1;
+  f_red_mean = f_red_mean >> 1;
 
   processingData.n_last_peak_interval = INIT_INTERVAL;
 
@@ -266,8 +265,8 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     f_red_mean = register_data.red_buffer[k] + f_red_mean;
   }
 
-  f_ir_mean = parseFloat(f_ir_mean)/buffer_len;
-  f_red_mean = parseFloat(f_red_mean)/buffer_len;
+  f_ir_mean = f_ir_mean/buffer_len;
+  f_red_mean = f_red_mean/buffer_len;
 
   
 //remove DC from both buffers
@@ -277,7 +276,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   }
   
   //console.log("blah");
-  //console.log(processingData.an_x);
+  console.log(f_ir_mean);
   
   console.log("processed data");
   for(k=0;k<buffer_len;++k){
