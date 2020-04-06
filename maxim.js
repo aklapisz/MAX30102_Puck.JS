@@ -175,12 +175,7 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     register_data.ir_buffer[i] &= 0x03FFFF;
     
   }
-  
-  //for(i=0;i<100;++i){
-  //  console.log(register_data.red_buffer[i]);
-  //}
-  
-  
+ 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -229,18 +224,18 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Functions for HR/SpO2 calculation
 
-  processingData.beta_ir = processingData.beta_ir<<1;
-  processingData.beta_ir = processingData.beta_ir>>1;
-  processingData.beta_red = processingData.beta_red << 1;
-  processingData.beta_red = processingData.beta_red >> 1;
-  processingData.f_y_ac = processingData.f_y_ac << 1;
-  processingData.f_y_ac = processingData.f_x_ac >> 1;
-  processingData.f_x_ac = processingData.f_x_ac << 1;
-  processingData.f_x_ac = processingData.f_x_ac >> 1;
-  processingData.ratio = processingData.ratio << 1;
-  processingData.ratio = processingData.ratio >> 1;
-  processingData.correl = processingData.correl << 1;
-  processingData.correl = processingData.correl >> 1;
+processingData.beta_ir = processingData.beta_ir<<1;
+processingData.beta_ir = processingData.beta_ir>>1;
+processingData.beta_red = processingData.beta_red << 1;
+processingData.beta_red = processingData.beta_red >> 1;
+processingData.f_y_ac = processingData.f_y_ac << 1;
+processingData.f_y_ac = processingData.f_x_ac >> 1;
+processingData.f_x_ac = processingData.f_x_ac << 1;
+processingData.f_x_ac = processingData.f_x_ac >> 1;
+processingData.ratio = processingData.ratio << 1;
+processingData.ratio = processingData.ratio >> 1;
+processingData.correl = processingData.correl << 1;
+processingData.correl = processingData.correl >> 1;
 
 
 MAX30102.prototype.data_saturation = function(saturated_data){
@@ -275,15 +270,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.an_y[k] = register_data.red_buffer[k] - f_red_mean;
   }
   
-  //console.log("blah");
-  console.log(f_ir_mean);
   
-  console.log("processed data");
-  for(k=0;k<buffer_len;++k){
-    console.log(processingData.an_x[k]);
-  }
-
-    console.log("linear regression algorithm");
 //remove linear trend (baseline leveling)
   this.linear_regression_beta();
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
@@ -291,7 +278,9 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.an_y[k] -= processingData.beta_red * x;
   }
   
-    console.log("rms algorithm");
+for(k=0;k<buffer_len;++k){
+  console.log(processingData.an_y[k]);
+}
 
 //Calculate RMS of both AC signals
   this.rms(buffer_len);
