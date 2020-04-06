@@ -245,7 +245,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
   let k;
   let buffer_len = register_data.buffer_length;
-  let f_ir_mean,f_red_mean;
+  let f_ir_mean,f_red_mean = 0;
   let xy_ratio;
   let x;
 
