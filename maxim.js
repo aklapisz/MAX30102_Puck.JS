@@ -281,10 +281,8 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 //Calculate RMS of both AC signals
   this.rms(buffer_len);
   
-  console.log("rms: " + processingData.f_y_ac);
-/*
 //Calculate Pearson correlation between red and IR
-  processingData.correl = this.Pcorrelation(buffer_len) / parseFloat(Math.sqrt(processingData.f_y_ac*processingData.f_x_ac));
+  processingData.correl = (this.Pcorrelation(buffer_len)) / parseFloat(Math.sqrt(processingData.f_y_ac*processingData.f_x_ac));
   
   
   if(processingData.correl >= min_pearson_correlation){
@@ -314,7 +312,6 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   }
   
   console.log("end algorithm");
-  */
 };
 
 
@@ -426,7 +423,7 @@ MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_d
     aut=aut_left;
     n_lag--;
     aut_left = this.autocorrelation(n_size, n_lag);
-  } while(aut_left > (aut && n_lag) > n_min_distance);
+  } while(aut_left > aut && n_lag > n_min_distance);
 
   if(n_lag == n_min_distance){
     left_limit_reached = true;
@@ -441,7 +438,7 @@ MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_d
       n_lag++;
       aut_right = this.autocorrelation(n_size, n_lag);
       console.log(aut_right + "   " + n_lag);
-    } while(aut_right > (aut && n_lag) < n_max_distance);
+    } while(aut_right>aut && n_lag<n_max_distance);
     
     console.log("out of for loop");
 
