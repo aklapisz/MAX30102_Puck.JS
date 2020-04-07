@@ -232,6 +232,10 @@ processingData.f_y_ac = processingData.f_y_ac << 1;
 processingData.f_y_ac = processingData.f_x_ac >> 1;
 processingData.f_x_ac = processingData.f_x_ac << 1;
 processingData.f_x_ac = processingData.f_x_ac >> 1;
+processingData.f_ir_sumsq = processingData.f_ir_sumsq << 1;
+processingData.f_ir_sumsq = processingData.f_ir_sumsq >> 1;
+processingData.f_red_sumsq = processingData.f_red_sumsq << 1;
+processingData.f_red_sumsq = processingData.f_red_sumsq >> 1;
 processingData.ratio = processingData.ratio << 1;
 processingData.ratio = processingData.ratio >> 1;
 processingData.correl = processingData.correl << 1;
@@ -371,8 +375,8 @@ MAX30102.prototype.rms = function(n_size){
     sumsq += r * r;
   }
   sumsq /= n_size;
-  processingData.f_x_ac = Math.sqrt(sumsq);
-  processingData.f_x_ac = parseFloat(processingData.f_x_ac);
+  processingData.f_ir_sumsq = partFloat(Math.sqrt(sumsq));
+  processingData.f_x_ac = parseFloat(processingData.f_ir_sumsq);
 
   r = 0.0;
   sumsq = 0.0;
@@ -381,8 +385,8 @@ MAX30102.prototype.rms = function(n_size){
     sumsq += r * r;
   }
   sumsq /= n_size;
-  processingData.f_y_ac = Math.sqrt(sumsq);
-  processingData.f_y_ac = parseFloat(processingData.f_y_ac);
+  processingData.f_red_sumsq = parseFloat(Math.sqrt(sumsq));
+  processingData.f_y_ac = parseFloat(processingData.f_red_sumsq);
 };
 
 
