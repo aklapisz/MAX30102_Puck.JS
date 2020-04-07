@@ -293,7 +293,8 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   for(k=0;k<buffer_len;++k){
     console.log(processingData.an_y[k]);
   }
-  
+  console.log("SQRT: " + Math.sqrt(processingData.f_y_ac*processingData.f_x_ac));
+  console.log("Correlation: " + processingData.correl);
   
   if(processingData.correl >= min_pearson_correlation){
     this.signal_periodicity(BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
@@ -397,7 +398,8 @@ MAX30102.prototype.Pcorrelation = function(n_size){
     r += processingData.an_x[i] * processingData.an_y[i];
   }
   
-  return parseFloat(r/n_size);
+  console.log("Pcorrel: " + r/n_size);
+  return (r/n_size);
 
 };
 
