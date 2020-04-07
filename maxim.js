@@ -375,7 +375,7 @@ MAX30102.prototype.rms = function(n_size){
     sumsq += r * r;
   }
   sumsq /= n_size;
-  processingData.f_ir_sumsq = partFloat(Math.sqrt(sumsq));
+  processingData.f_ir_sumsq = parseFloat(Math.sqrt(sumsq));
   processingData.f_x_ac = parseFloat(processingData.f_ir_sumsq);
 
   r = 0.0;
