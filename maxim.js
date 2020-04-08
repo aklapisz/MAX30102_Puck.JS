@@ -251,7 +251,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   let xy_ratio = 0;
   let x = 0;
   
-  console.log("array type: " + typeof(register_data.red_buffer));
+  console.log("array type: " + typeof(register_data.red_buffer[1]));
   /*
   f_ir_mean = f_ir_mean << 1;
   f_ir_mean = f_ir_mean >> 1;
