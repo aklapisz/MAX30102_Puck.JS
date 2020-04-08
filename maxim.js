@@ -175,11 +175,6 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     //register_data.ir_buffer[i] &= 0x03FFFF;
     
   }
-  
-  //for(i=0;i<BUFFER_SIZE;i++){
-  //  register_data.ir_buffer[i] = parseFloat(register_data.ir_buffer[i]);
-  //  register_data.red_buffer[i] = parseFloat(register_data.red_buffer[i]);
-  //}
     
 };
 
@@ -228,57 +223,27 @@ MAX30102.prototype.getTemperature = function(saturated_data, unit){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Functions for HR/SpO2 calculation
-/*
-//the following need to be converted to 32bit nunmbers using bit shifting
-processingData.beta_ir = processingData.beta_ir<<1;
-processingData.beta_ir = processingData.beta_ir>>1;
-processingData.beta_red = processingData.beta_red << 1;
-processingData.beta_red = processingData.beta_red >> 1;
-processingData.f_y_ac = processingData.f_y_ac << 1;
-processingData.f_y_ac = processingData.f_x_ac >> 1;
-processingData.f_x_ac = processingData.f_x_ac << 1;
-processingData.f_x_ac = processingData.f_x_ac >> 1;
-processingData.f_ir_sumsq = processingData.f_ir_sumsq << 1;
-processingData.f_ir_sumsq = processingData.f_ir_sumsq >> 1;
-processingData.f_red_sumsq = processingData.f_red_sumsq << 1;
-processingData.f_red_sumsq = processingData.f_red_sumsq >> 1;
-processingData.ratio = processingData.ratio << 1;
-processingData.ratio = processingData.ratio >> 1;
-processingData.correl = processingData.correl << 1;
-processingData.correl = processingData.correl >> 1;
-*/
 
 MAX30102.prototype.data_saturation = function(saturated_data){
   
-  let k = 0;
-  let buffer_len = BUFFER_SIZE;
-  let f_ir_mean,f_red_mean = 0;
-  let xy_ratio = 0;
-  let x = 0;
-  
-  //console.log("array type: " + typeof(register_data.red_buffer[1]));
-  /*
-  f_ir_mean = f_ir_mean << 1;
-  f_ir_mean = f_ir_mean >> 1;
-  f_red_mean = f_red_mean << 1;
-  f_red_mean = f_red_mean >> 1;
-*/
+  var k = 0;
+  var buffer_len = BUFFER_SIZE;
+  var f_ir_mean = 0;
+  var f_red_mean = 0;
+  var xy_ratio = 0;
+  var x = 0;
 
   processingData.n_last_peak_interval = INIT_INTERVAL;
 
-
+console.log(f_ir_mean);
 //calculate DC mean of ir and red buffers
   for(k=0; k<buffer_len; ++k){ 
     f_ir_mean = register_data.ir_buffer[k] + f_ir_mean;
     f_red_mean = register_data.red_buffer[k] + f_red_mean;
-    console.log(f_ir_mean);
   }
-
-  //console.log("pre division: " + f_ir_mean); 
+console.log(f_ir_mean);
   f_ir_mean = f_ir_mean/buffer_len;
   f_red_mean = f_red_mean/buffer_len;
-  //console.log("mean: " + f_ir_mean);
-
   
 //remove DC from both buffers
   for(k=0; k<buffer_len; ++k){
@@ -302,8 +267,6 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   for(k=0;k<buffer_len;++k){
     console.log(register_data.red_buffer[k]);
   }
-  //console.log("SQRT: " + Math.sqrt(processingData.f_y_ac*processingData.f_x_ac));
-  //console.log("Correlation: " + processingData.correl);
   
   if(processingData.correl >= min_pearson_correlation){
     this.signal_periodicity(BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
@@ -329,8 +292,6 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     saturated_data.n_spo2 = -999;
     saturated_data.ch_spo2_valid = 0;
   }
-  
-  console.log("end algorithm");
 };
 
 
@@ -405,8 +366,7 @@ MAX30102.prototype.Pcorrelation = function(n_size){
   for(i=0; i<n_size; ++i){
     r += processingData.an_x[i] * processingData.an_y[i];
   }
-  
-  //console.log("Pcorrel: " + r/n_size);
+
   return (r/n_size);
 
 };
