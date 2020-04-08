@@ -163,16 +163,16 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
   
   for(i=0;i<BUFFER_SIZE;i++){
     
-    register_data.red_buffer[i] = (temp_data_array[i][0] * 65536);
-    register_data.red_buffer[i] += (temp_data_array[i][1] * 256);
+    register_data.red_buffer[i] = 65536 * (temp_data_array[i][0]);
+    register_data.red_buffer[i] += 256 * (temp_data_array[i][1]);
     register_data.red_buffer[i] += temp_data_array[i][2];
-    register_data.red_buffer[i] &= 0x03FFFF;
+    //register_data.red_buffer[i] &= 0x03FFFF;
   
   
-    register_data.ir_buffer[i] = (temp_data_array[i][3] * 65536);
-    register_data.ir_buffer[i] += (temp_data_array[i][4] * 256);
+    register_data.ir_buffer[i] = 65536 * (temp_data_array[i][3]);
+    register_data.ir_buffer[i] += 256 * (temp_data_array[i][4]);
     register_data.ir_buffer[i] += temp_data_array[i][5];
-    register_data.ir_buffer[i] &= 0x03FFFF;
+    //register_data.ir_buffer[i] &= 0x03FFFF;
     
   }
   
