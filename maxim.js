@@ -166,14 +166,10 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     register_data.red_buffer[i] = 65536 * (temp_data_array[i][0]);
     register_data.red_buffer[i] += 256 * (temp_data_array[i][1]);
     register_data.red_buffer[i] += temp_data_array[i][2];
-    //register_data.red_buffer[i] &= 0x03FFFF;
-  
-  
+
     register_data.ir_buffer[i] = 65536 * (temp_data_array[i][3]);
     register_data.ir_buffer[i] += 256 * (temp_data_array[i][4]);
     register_data.ir_buffer[i] += temp_data_array[i][5];
-    //register_data.ir_buffer[i] &= 0x03FFFF;
-    
   }
     
 };
@@ -235,13 +231,12 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
   processingData.n_last_peak_interval = INIT_INTERVAL;
 
-console.log(f_ir_mean);
 //calculate DC mean of ir and red buffers
   for(k=0; k<buffer_len; ++k){ 
     f_ir_mean = register_data.ir_buffer[k] + f_ir_mean;
     f_red_mean = register_data.red_buffer[k] + f_red_mean;
   }
-console.log(f_ir_mean);
+
   f_ir_mean = f_ir_mean/buffer_len;
   f_red_mean = f_red_mean/buffer_len;
   
@@ -253,6 +248,7 @@ console.log(f_ir_mean);
   
 //remove linear trend (baseline leveling)
   this.linear_regression_beta();
+  console.log(processingData.beta_ir);
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
     processingData.an_x[k] -= processingData.beta_ir * x;
     processingData.an_y[k] -= processingData.beta_red * x;
@@ -264,9 +260,9 @@ console.log(f_ir_mean);
 //Calculate Pearson correlation between red and IR
   processingData.correl = (this.Pcorrelation(buffer_len)) / parseFloat(Math.sqrt(processingData.f_y_ac*processingData.f_x_ac));
   
-  for(k=0;k<buffer_len;++k){
-    console.log(register_data.red_buffer[k]);
-  }
+  //for(k=0;k<buffer_len;++k){
+  //  console.log(register_data.red_buffer[k]);
+  //}
   
   if(processingData.correl >= min_pearson_correlation){
     this.signal_periodicity(BUFFER_SIZE, LOWEST_PERIOD, HIGHEST_PERIOD, min_autocorrelation_ratio);
