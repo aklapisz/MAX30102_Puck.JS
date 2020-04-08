@@ -12,23 +12,23 @@ var saturated_data = {
 };
 */
 
-const ST = 4 | 0;
-const FS = 25 | 0;
+const ST = (4 >> 0);
+const FS = (25 >> 0);
 
-const MAX_HR = 125 | 0;
-const MIN_HR = 40 | 0;
-const TYPICAL_HR = 60 | 0;
+const MAX_HR = (125 >> 0);
+const MIN_HR = (40 >> 0);
+const TYPICAL_HR = (60 >> 0);
 
-const BUFFER_SIZE = (FS * ST) | 0;
-const FS60 = (FS * 60) | 0;
-const INIT_INTERVAL = (FS60/TYPICAL_HR) | 0;
+const BUFFER_SIZE = FS * ST;
+const FS60 = (FS * 60) >> 0;
+const INIT_INTERVAL = FS60/TYPICAL_HR;
 
-const LOWEST_PERIOD = (FS60/MAX_HR) | 0;
-const HIGHEST_PERIOD = (FS60/MIN_HR) | 0;
-const mean_X = ((BUFFER_SIZE-1)/2) | 0;
-const min_autocorrelation_ratio = 0.5 | 0;
-const min_pearson_correlation = 0.8 | 0;
-const sum_X2 = 83325 | 0;
+const LOWEST_PERIOD = FS60/MAX_HR;
+const HIGHEST_PERIOD = FS60/MIN_HR;
+const mean_X = (BUFFER_SIZE-1)/2;
+const min_autocorrelation_ratio = (0.5 >> 0);
+const min_pearson_correlation = (0.8 >> 0);
+const sum_X2 = (83325 >> 0);
 
 
 //object that holds all relavant register addresses on the MAX30102
@@ -72,13 +72,13 @@ let register_data = {
 let processingData = {
   an_x: new Array(BUFFER_SIZE).fill(0),
   an_y: new Array(BUFFER_SIZE).fill(0),
-  beta_ir: 0 | 0,
-  beta_red: 0 | 0,
-  f_y_ac: 0 | 0,
-  f_x_ac: 0 | 0,
-  n_last_peak_interval: INIT_INTERVAL | 0,
-  ratio: 0 | 0,
-  correl: 0 | 0
+  beta_ir: (0 >> 0),
+  beta_red: (0 >> 0),
+  f_y_ac: (0 >> 0),
+  f_x_ac: (0 >> 0),
+  n_last_peak_interval: INIT_INTERVAL,
+  ratio: (0 >> 0),
+  correl: (0 >> 0)
 };
 
 
@@ -246,10 +246,10 @@ processingData.correl = processingData.correl >> 1;
 MAX30102.prototype.data_saturation = function(saturated_data){
   
   let k = 0;
-  let buffer_len = BUFFER_SIZE | 0;
-  let f_ir_mean,f_red_mean = 0 | 0;
-  let xy_ratio = 0 | 0;
-  let x = 0 | 0;
+  let buffer_len = BUFFER_SIZE;
+  let f_ir_mean,f_red_mean = (0 >> 0);
+  let xy_ratio = (0 >> 0);
+  let x = (0 >> 0);
   
   /*
   f_ir_mean = f_ir_mean << 1;
@@ -327,7 +327,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
 
 MAX30102.prototype.linear_regression_beta = function(){
-  let x,beta = 0 | 0;
+  let x,beta = 0;
   let k = 0;
 
   for(x=-mean_X, k=0; x<=mean_X; ++x, ++k){
@@ -348,8 +348,7 @@ MAX30102.prototype.linear_regression_beta = function(){
 MAX30102.prototype.autocorrelation = function(n_size, n_lag){
 
   let i, n_temp = n_size - n_lag;
-  let sum = 0 | 0;
-  sum = 0 | 0;
+  let sum = (0 >> 0);
 
   if(n_temp<=0) return sum;
   for(i=0; i<n_temp; ++i){
@@ -365,8 +364,8 @@ MAX30102.prototype.rms = function(n_size){
 
   let i;
 
-  let r = 0;
-  let sumsq = 0;
+  let r = (0 >> 0);
+  let sumsq = (0 >> 0);
   
   for(i=0; i<n_size; ++i){
     r = processingData.an_x[i];
@@ -376,8 +375,8 @@ MAX30102.prototype.rms = function(n_size){
   processingData.f_ir_sumsq = parseFloat(Math.sqrt(sumsq));
   processingData.f_x_ac = parseFloat(processingData.f_ir_sumsq);
 
-  r = 0 | 0;
-  sumsq = 0 | 0;
+  r = 0;
+  sumsq = 0;
   for(i=0; i<n_size; ++i){
     r = processingData.an_y[i];
     sumsq += r * r;
@@ -392,7 +391,7 @@ MAX30102.prototype.rms = function(n_size){
 MAX30102.prototype.Pcorrelation = function(n_size){
 
   let i;
-  let r = 0;
+  let r = (0 >> 0);
 
   for(i=0; i<n_size; ++i){
     r += processingData.an_x[i] * processingData.an_y[i];
@@ -407,7 +406,7 @@ MAX30102.prototype.Pcorrelation = function(n_size){
 MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_distance, min_aut_ratio){
 
   let n_lag;
-  let aut,aut_left,aut_right,aut_save = 0 | 0;
+  let aut,aut_left,aut_right,aut_save = (0 >> 0);
   let left_limit_reached = false;
   
   aut = aut << 1;
