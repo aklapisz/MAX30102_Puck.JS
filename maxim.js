@@ -266,12 +266,13 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   for(k=0; k<buffer_len; ++k){ 
     f_ir_mean = register_data.ir_buffer[k] + f_ir_mean;
     f_red_mean = register_data.red_buffer[k] + f_red_mean;
+    console.log(f_ir_mean);
   }
 
-  console.log("pre division: " + f_ir_mean); 
+  //console.log("pre division: " + f_ir_mean); 
   f_ir_mean = f_ir_mean/buffer_len;
   f_red_mean = f_red_mean/buffer_len;
-  console.log("mean: " + f_ir_mean);
+  //console.log("mean: " + f_ir_mean);
 
   
 //remove DC from both buffers
@@ -293,9 +294,9 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 //Calculate Pearson correlation between red and IR
   processingData.correl = (this.Pcorrelation(buffer_len)) / parseFloat(Math.sqrt(processingData.f_y_ac*processingData.f_x_ac));
   
-  for(k=0;k<buffer_len;++k){
-    console.log(processingData.an_y[k]);
-  }
+  //for(k=0;k<buffer_len;++k){
+  //  console.log(processingData.an_y[k]);
+  //}
   console.log("SQRT: " + Math.sqrt(processingData.f_y_ac*processingData.f_x_ac));
   console.log("Correlation: " + processingData.correl);
   
