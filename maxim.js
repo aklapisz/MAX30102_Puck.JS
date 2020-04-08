@@ -251,7 +251,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   let xy_ratio = 0;
   let x = 0;
   
-  console.log("array type: " + typeof(register_data.red_buffer[1]));
+  //console.log("array type: " + typeof(register_data.red_buffer[1]));
   /*
   f_ir_mean = f_ir_mean << 1;
   f_ir_mean = f_ir_mean >> 1;
@@ -270,6 +270,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
   f_ir_mean = f_ir_mean/buffer_len;
   f_red_mean = f_red_mean/buffer_len;
+  console.log("mean: " + f_ir_mean);
 
   
 //remove DC from both buffers
@@ -365,8 +366,8 @@ MAX30102.prototype.rms = function(n_size){
 
   let i;
 
-  let r = (0 >> 0);
-  let sumsq = (0 >> 0);
+  let r = 0;
+  let sumsq = 0;
   
   for(i=0; i<n_size; ++i){
     r = processingData.an_x[i];
@@ -392,7 +393,7 @@ MAX30102.prototype.rms = function(n_size){
 MAX30102.prototype.Pcorrelation = function(n_size){
 
   let i;
-  let r = (0 >> 0);
+  let r = 0;
 
   for(i=0; i<n_size; ++i){
     r += processingData.an_x[i] * processingData.an_y[i];
@@ -407,7 +408,7 @@ MAX30102.prototype.Pcorrelation = function(n_size){
 MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_distance, min_aut_ratio){
 
   let n_lag;
-  let aut,aut_left,aut_right,aut_save = (0 >> 0);
+  let aut,aut_left,aut_right,aut_save = 0;
   let left_limit_reached = false;
   
   aut = aut << 1;
