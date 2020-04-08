@@ -175,7 +175,12 @@ MAX30102.prototype.read_fifo_data = function(digitalRead, interrupt_pin){
     register_data.ir_buffer[i] &= 0x03FFFF;
     
   }
- 
+  
+  for(i=0;i<BUFFER_SIZE;i++){
+    register_data.ir_buffer[i] = Number(register_data.ir_buffer[i]);
+    register_data.red_buffer[i] = Number(register_data.red_buffer[i]);
+  }
+    
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
