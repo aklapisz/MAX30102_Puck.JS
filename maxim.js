@@ -12,23 +12,23 @@ var saturated_data = {
 };
 */
 
-const ST = (4 >> 0);
-const FS = (25 >> 0);
+const ST = 4;
+const FS = 25;
 
-const MAX_HR = (125 >> 0);
-const MIN_HR = (40 >> 0);
-const TYPICAL_HR = (60 >> 0);
+const MAX_HR = 125;
+const MIN_HR = 40;
+const TYPICAL_HR = 60;
 
 const BUFFER_SIZE = FS * ST;
-const FS60 = (FS * 60) >> 0;
+const FS60 = FS * 60;
 const INIT_INTERVAL = FS60/TYPICAL_HR;
 
 const LOWEST_PERIOD = FS60/MAX_HR;
 const HIGHEST_PERIOD = FS60/MIN_HR;
-const mean_X = (BUFFER_SIZE-1)/2;
-const min_autocorrelation_ratio = (0.5 >> 0);
-const min_pearson_correlation = (0.8 >> 0);
-const sum_X2 = (83325 >> 0);
+const mean_X = (BUFFER_SIZE-1)/2.0;
+const min_autocorrelation_ratio = 0.5;
+const min_pearson_correlation = 0.8;
+const sum_X2 = 83325;
 
 
 //object that holds all relavant register addresses on the MAX30102
@@ -72,13 +72,13 @@ let register_data = {
 let processingData = {
   an_x: new Array(BUFFER_SIZE).fill(0),
   an_y: new Array(BUFFER_SIZE).fill(0),
-  beta_ir: (0 >> 0),
-  beta_red: (0 >> 0),
-  f_y_ac: (0 >> 0),
-  f_x_ac: (0 >> 0),
+  beta_ir: 0,
+  beta_red: 0,
+  f_y_ac: 0,
+  f_x_ac: 0,
   n_last_peak_interval: INIT_INTERVAL,
-  ratio: (0 >> 0),
-  correl: (0 >> 0)
+  ratio: 0,
+  correl: 0
 };
 
 
@@ -247,10 +247,11 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   
   let k = 0;
   let buffer_len = BUFFER_SIZE;
-  let f_ir_mean,f_red_mean = (0 >> 0);
-  let xy_ratio = (0 >> 0);
-  let x = (0 >> 0);
+  let f_ir_mean,f_red_mean = 0;
+  let xy_ratio = 0;
+  let x = 0;
   
+  console.log("array type: " + typeof(register_data.red_buffer));
   /*
   f_ir_mean = f_ir_mean << 1;
   f_ir_mean = f_ir_mean >> 1;
