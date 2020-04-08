@@ -268,6 +268,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     f_red_mean = register_data.red_buffer[k] + f_red_mean;
   }
 
+  console.log("pre division: " + f_ir_mean); 
   f_ir_mean = f_ir_mean/buffer_len;
   f_red_mean = f_red_mean/buffer_len;
   console.log("mean: " + f_ir_mean);
