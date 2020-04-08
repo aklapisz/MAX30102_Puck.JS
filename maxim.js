@@ -76,6 +76,8 @@ let processingData = {
   beta_red: 0,
   f_y_ac: 0,
   f_x_ac: 0,
+  f_ir_sumsq: 0,
+  f_red_sumsq: 0,
   n_last_peak_interval: INIT_INTERVAL,
   ratio: 0,
   correl: 0
@@ -248,7 +250,6 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   
 //remove linear trend (baseline leveling)
   this.linear_regression_beta();
-  console.log(processingData.beta_ir);
   for(k=0,x=-mean_X; k<buffer_len; ++k,++x){
     processingData.an_x[k] -= processingData.beta_ir * x;
     processingData.an_y[k] -= processingData.beta_red * x;
@@ -256,6 +257,9 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   
 //Calculate RMS of both AC signals
   this.rms(buffer_len);
+  
+  console.log(processingData.f_y_ac);
+  console.log(processingData.f_ir_sumsq);
   
 //Calculate Pearson correlation between red and IR
   processingData.correl = (this.Pcorrelation(buffer_len)) / parseFloat(Math.sqrt(processingData.f_y_ac*processingData.f_x_ac));
@@ -293,8 +297,9 @@ MAX30102.prototype.data_saturation = function(saturated_data){
 
 
 MAX30102.prototype.linear_regression_beta = function(){
-  let x,beta = 0;
-  let k = 0;
+  var x = 0;
+  var beta = 0;
+  var k = 0;
 
   for(x=-mean_X, k=0; x<=mean_X; ++x, ++k){
     beta += x * processingData.an_x[k];
@@ -313,7 +318,8 @@ MAX30102.prototype.linear_regression_beta = function(){
 
 MAX30102.prototype.autocorrelation = function(n_size, n_lag){
 
-  let i, n_temp = n_size - n_lag;
+  var i = n_size - n_lag;
+  var n_temp = n_size - n_lag;
   let sum = (0 >> 0);
 
   if(n_temp<=0) return sum;
@@ -328,10 +334,9 @@ MAX30102.prototype.autocorrelation = function(n_size, n_lag){
 
 MAX30102.prototype.rms = function(n_size){
 
-  let i;
-
-  let r = 0;
-  let sumsq = 0;
+  var i = 0;
+  var r = 0;
+  var sumsq = 0;
   
   for(i=0; i<n_size; ++i){
     r = processingData.an_x[i];
@@ -356,8 +361,8 @@ MAX30102.prototype.rms = function(n_size){
 
 MAX30102.prototype.Pcorrelation = function(n_size){
 
-  let i;
-  let r = 0;
+  var i = 0;
+  var r = 0;
 
   for(i=0; i<n_size; ++i){
     r += processingData.an_x[i] * processingData.an_y[i];
@@ -370,19 +375,13 @@ MAX30102.prototype.Pcorrelation = function(n_size){
 
 MAX30102.prototype.signal_periodicity = function(n_size, n_min_distance, n_max_distance, min_aut_ratio){
 
-  let n_lag;
-  let aut,aut_left,aut_right,aut_save = 0;
-  let left_limit_reached = false;
+  var n_lag = 0;
+  var aut = 0;
+  var aut_left = 0;
+  var aut_right= 0;
+  var aut_save = 0;
+  var left_limit_reached = false;
   
-  aut = aut << 1;
-  aut = aut >> 1;
-  aut_left = aut_left << 1;
-  aut_left = aut_left >> 1;
-  aut_right = aut_right << 1;
-  aut_right = aut_right >> 1;
-  aut_save = aut_save << 1;
-  aut_save = aut_save >> 1;
-
   n_lag = processingData.n_last_peak_interval;
   aut_save, aut = this.autocorrelation(n_size, n_lag);
   aut_left = aut;
