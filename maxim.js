@@ -115,6 +115,10 @@ MAX30102.prototype.reset = function(){
   this.write8(C.REG_MODE_CONFIG,0x40);
 };
 
+//function to put sensor in sleep mode
+MAX30102.prototype.sleep = function(){
+  this.write(C.REG_MODE_CONFIG,0x83);
+};
 
 //initilizes the settings of the MAX30102 by writing a specific configuration to each desired register and also resets FIFO pointers
 //note:to use different settings, change the value being written to the register that controls the setting (reference MAX30102 datasheet)
