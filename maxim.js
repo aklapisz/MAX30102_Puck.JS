@@ -234,6 +234,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
   var f_red_mean = 0;
   var xy_ratio = 0;
   var x = 0;
+  var spo2 = 0;
 
   processingData.n_last_peak_interval = INIT_INTERVAL;
 
@@ -276,17 +277,22 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     processingData.n_last_peak_interval = FS;
     saturated_data.n_heart_rate = -999;
     saturated_data.ch_hr_valid = 0;
-    saturated_data.n_spo2 = -999;
+    saturated_data.n_spo2_int = -999;
+    saturated_data.n_spo2_dec = -999;
     saturated_data.ch_spo2_valid = 0;
     return;
   }
 
   xy_ratio = (processingData.f_y_ac * f_ir_mean) / (processingData.f_x_ac * f_red_mean);
+  
   if(xy_ratio>0.02 && xy_ratio<1.84){
-    saturated_data.n_spo2 = (-45.060 * xy_ratio + 30.354) * xy_ratio + 94.845;
+    spo2 = (-45.060 * xy_ratio + 30.354) * xy_ratio + 94.845;
+    saturated_data.n_spo2_int = Math.floor(spo2);
+    saturated_data.n_spo2_dec = spo2 % 1;
     saturated_data.ch_spo2_valid = 1;
   }else{
-    saturated_data.n_spo2 = -999;
+    saturated_data.n_spo2_int = -999;
+    saturated_data.n_spo2_dec = -999;
     saturated_data.ch_spo2_valid = 0;
   }
 };
