@@ -275,9 +275,9 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     saturated_data.ch_hr_valid = 1;
   }else{
     processingData.n_last_peak_interval = FS;
-    saturated_data.n_heart_rate = -999;
+    saturated_data.n_heart_rate = 0;  //invalid hr
     saturated_data.ch_hr_valid = 0;
-    saturated_data.n_spo2_int = -999;
+    saturated_data.n_spo2_int = 0; //invalid spo2
     saturated_data.n_spo2_dec = 0;
     saturated_data.ch_spo2_valid = 0;
     return;
@@ -291,7 +291,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     saturated_data.n_spo2_dec = Math.floor((spo2 % 1) >> 2);
     saturated_data.ch_spo2_valid = 1;
   }else{
-    saturated_data.n_spo2_int = -999;
+    saturated_data.n_spo2_int = 0;  //invalid spo2
     saturated_data.n_spo2_dec = 0;
     saturated_data.ch_spo2_valid = 0;
   }
