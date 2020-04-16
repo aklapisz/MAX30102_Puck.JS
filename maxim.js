@@ -289,7 +289,7 @@ MAX30102.prototype.data_saturation = function(saturated_data){
     spo2 = (-45.060 * xy_ratio + 30.354) * xy_ratio + 94.845;
     saturated_data.n_spo2_int = Math.floor(spo2);
     //saturated_data.n_spo2_dec = Math.floor((spo2 % 1) >> 2);
-    saturated_data.n_spo2_dec = (spo2 % 1);
+    saturated_data.n_spo2_dec = (spo2 % 1) >> 2;
     saturated_data.ch_spo2_valid = 1;
   }else{
     saturated_data.n_spo2_int = 0;  //invalid spo2
